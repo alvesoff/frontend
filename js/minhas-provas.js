@@ -1,19 +1,11 @@
 // Minhas Provas - JavaScript
 
-// URL da API
-const API_URL = 'http://localhost:3001/api';
-
-// Função para obter o token JWT do localStorage
-function getToken() {
-  return localStorage.getItem('token');
-}
+// Importar configurações da API
+const API_URL = API_CONFIG.BASE_URL;
 
 // Função para verificar se o professor está logado
 function verificarLogin() {
-  const token = getToken();
-  const professorLoggedIn = localStorage.getItem('professorLoggedIn');
-  
-  if (!token || professorLoggedIn !== 'true') {
+  if (!API_CONFIG.isProfessorLoggedIn()) {
     window.location.href = '/pages/login-professor.html';
     return false;
   }
@@ -26,15 +18,10 @@ async function buscarMinhasProvas() {
     // Verificar se o professor está logado
     if (!verificarLogin()) return [];
     
-    const token = getToken();
-    
     // Buscar provas do professor
     const response = await fetch(`${API_URL}/provas`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': token
-      }
+      headers: API_CONFIG.getAuthHeaders()
     });
     
     if (!response.ok) {

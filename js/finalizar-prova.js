@@ -2,20 +2,10 @@
 // FINALIZAR-PROVA.JS
 // ===========================
 
-// Verificar se API_CONFIG está definido, caso contrário, definir com valores padrão
+// Verificar se API_CONFIG está disponível
 if (typeof API_CONFIG === 'undefined') {
-  console.warn('API_CONFIG não encontrado, usando configuração padrão');
-  const API_CONFIG = {
-    BASE_URL: 'http://localhost:3001/api',
-    getHeaders: function() {
-      return {
-        'Content-Type': 'application/json',
-        'x-auth-token': localStorage.getItem('token')
-      };
-    }
-  };
-  // Tornar API_CONFIG global
-  window.API_CONFIG = API_CONFIG;
+  console.error('API_CONFIG não encontrado. Por favor, verifique se o arquivo api-config.js está incluído.');
+  window.location.href = '/pages/login-professor.html';
 }
 
 // Global para as questões selecionadas (persistência via localStorage)
@@ -43,11 +33,8 @@ btnSearch.addEventListener('click', async () => {
   }
   
   try {
-    // URL da API
-    const API_URL = 'http://localhost:3001/api';
-    
-    // Obter token do localStorage
-    const token = localStorage.getItem('token');
+    // Usar a configuração global da API
+    const API_URL = API_CONFIG.BASE_URL;
     
     if (!token) {
       alert('Você precisa estar logado para buscar questões.');

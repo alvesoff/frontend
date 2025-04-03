@@ -1,19 +1,11 @@
 // Dashboard do Professor - JavaScript
 
-// URL da API
-const API_URL = 'http://localhost:3001/api';
-
-// Função para obter o token JWT do localStorage
-function getToken() {
-  return localStorage.getItem('token');
-}
+// Importar configurações da API
+const API_URL = API_CONFIG.BASE_URL;
 
 // Função para verificar se o professor está logado
 function verificarLogin() {
-  const token = getToken();
-  const professorLoggedIn = localStorage.getItem('professorLoggedIn');
-  
-  if (!token || professorLoggedIn !== 'true') {
+  if (!API_CONFIG.isProfessorLoggedIn()) {
     window.location.href = '/pages/login-professor.html';
     return false;
   }
