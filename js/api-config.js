@@ -7,7 +7,7 @@
  */
 const API_CONFIG = {
   // URL base da API
-  BASE_URL: 'http://localhost:3001/api',
+  BASE_URL: 'https://api-educasmart.onrender.com',
   
   // Função para obter o token JWT do localStorage
   getToken: function() {
