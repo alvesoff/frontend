@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Login do Professor</title>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- CSS específico para login -->
+  <link rel="stylesheet" href="/css/login-professor.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <!-- Cabeçalho -->
+  <header class="header">
+    <nav class="navbar">
+      <!-- Logo ou nome do sistema -->
+      <div class="logo">
+        <span class="logo-top">Educa</span>
+        <span class="logo-bottom">Smart</span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Container principal -->
+  <main class="container login-container">
+    <div class="login-card">
+      <h1>Acesso do Professor</h1>
+      <p class="login-subtitle">Faça login para acessar o sistema</p>
+      
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="senha" placeholder="Digite sua senha" required>
+        </div>
+        
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" name="remember"> Lembrar-me
+          </label>
+          <a href="/pages/suporte.html" class="forgot-password">Esqueceu a senha?</a>
+        </div>
+        
+        <button type="submit" class="btn-primary btn-login">Entrar</button>
+      </form>
+      
+      <!-- Removido link de cadastro - apenas administradores podem cadastrar novos professores -->
+      <div class="login-footer">
+        <p>Entre em contato com o administrador para obter acesso</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>&copy; 2023 Educa Smart - Todos os direitos reservados</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="/js/api-config.js"></script>
+  <script src="/js/login-professor.js"></script>
+</body>
+</html>

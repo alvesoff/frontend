@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Evitar zoom no iOS: maximum-scale=1.0, user-scalable=no -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Página Inicial</title>
+  <!-- CSS Geral -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <!-- CSS para os Modais -->
+  <link rel="stylesheet" href="../css/modal.css" />
+  <!-- CSS para o dropdown do perfil -->
+  <link rel="stylesheet" href="../css/profile-dropdown.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+  <!-- CSS para Minhas Provas -->
+  <link rel="stylesheet" href="../css/minhas-provas.css" />
+  <!-- JavaScript para o dropdown do perfil -->
+  <script src="../js/profile-dropdown.js"></script>
+  <!-- API Config -->
+  <script src="../js/api-config.js"></script>
+</head>
+<body>
+
+  <!-- Conteúdo da página principal (header, busca, hero, etc.) -->
+  <header class="header">
+    <nav class="navbar">
+      <!-- Logo ou nome do sistema -->
+      <div class="logo">
+        <span class="logo-top">Educa</span>
+        <span class="logo-bottom">Smart</span>
+      </div>
+      <!-- Ícone de usuário com dropdown -->
+      <div class="user-profile" id="userProfile">
+        <img src="../img/user-icon.png" alt="Usuário" />
+        <!-- Dropdown menu do perfil -->
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <h3>Professor</h3>
+            <p>professor@educasmart.com</p>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a href="#"><span class="menu-icon">👤</span> Meu Perfil</a></li>
+            <li><a href="#"><span class="menu-icon">⚙️</span> Configurações</a></li>
+            <div class="dropdown-divider"></div>
+            <li><a href="#" class="logout-item"><span class="menu-icon">🚪</span> Sair</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="search-container">
+    <div class="search-box">
+      <input type="text" placeholder="Busque por temas, disciplinas etc" />
+      <button class="search-button">
+        <img src="../img/search-icon.png" alt="Ícone de busca" />
+      </button>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <section class="hero-section">
+      <h1>
+        Planeje Simulados em <br>
+        apenas <span>5 minutos</span>
+      </h1>
+      <div class="button-group" id="meu-botao">
+        <!-- Botão que abre o 1º modal (Escolaridade) -->
+        <button class="btn-primary" id="openModalBtn">Gerar Prova</button>
+        <button class="btn-primary">Corrigir Provas</button>
+        <button class="btn-primary">Questões Favoritas</button>
+        <button class="btn-primary">Relatórios de Provas Realizadas</button>
+      </div>
+      
+      <!-- Botões de acesso rápido -->
+      <div class="access-buttons">
+        <a href="login-aluno.html" class="btn-access">Acesso do Aluno</a>
+        <a href="dashboard-professor.html" class="btn-access">Dashboard</a>
+      </div>
+    </section>
+
+    <div class="main-image">
+      <img src="../img/blocks-kids.png" alt="Desenho de crianças com blocos" class="responsive-image" />
+    </div>
+  </main>
+
+  <!-- ==========================
+       MODAL 1: ESCOLARIDADE
+  ========================== -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+      <!-- Botão para fechar o 1º modal -->
+      <button id="closeModalBtn" class="close-modal-btn">&times;</button>
+      <h2>Nova Prova</h2>
+
+      <label for="nomeProva">Nome da Prova</label>
+      <input type="text" id="nomeProva" placeholder="Nome da prova" />
+
+      <h3>Escolaridade</h3>
+      <p>E. Fundamental Anos Iniciais</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="escolaridadeFundamental" value="1º ano" />1º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="2º ano" />2º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="3º ano" />3º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="4º ano" />4º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="5º ano" />5º ano</label>
+      </div>
+
+      <p>E. Fundamental Anos Finais</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="escolaridadeFundamental" value="6º ano" />6º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="7º ano" />7º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="8º ano" />8º ano</label>
+        <label><input type="checkbox" name="escolaridadeFundamental" value="9º ano" />9º ano</label>
+      </div>
+
+      <p>Ensino Médio</p>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="escolaridadeMedio" value="Ensino Médio" />1ª à 3ª série</label>
+      </div>
+
+      <button class="btn-continue" id="btnContinue1">Continuar</button>
+    </div>
+  </div>
+
+  <!-- ==========================
+       MODAL 2: COMPONENTES
+  ========================== -->
+  <div id="modalOverlayStep2" class="modal-overlay">
+    <div class="modal-content">
+      <!-- Botão para fechar o 2º modal -->
+      <button id="closeModalBtnStep2" class="close-modal-btn">&times;</button>
+
+      <h2>Nova Prova</h2>
+      <p>Quais são o(s) componente(s) curricular(es) das questões desta prova?</p>
+
+      <!-- Seção FUNDAMENTAL (oculta se não selecionado) -->
+      <div class="section-fundamental">
+        <h3>E. Fundamental</h3>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="componentesFundamental" value="Ciências" />Ciências</label>
+          <label><input type="checkbox" name="componentesFundamental" value="Geografia" />Geografia</label>
+          <label><input type="checkbox" name="componentesFundamental" value="Matemática" />Matemática</label>
+          <label><input type="checkbox" name="componentesFundamental" value="Educação Física" />Educação Física</label>
+          <label><input type="checkbox" name="componentesFundamental" value="Artes" />Artes</label>
+          <label><input type="checkbox" name="componentesFundamental" value="Língua Portuguesa" />Língua Portuguesa</label>
+          <label><input type="checkbox" name="componentesFundamental" value="Língua Inglesa" />Língua Inglesa</label>
+        </div>
+      </div>
+
+      <!-- Seção ENSINO MÉDIO (oculta se não selecionado) -->
+      <div class="section-medio">
+        <h3>Ensino Médio</h3>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="componentesMedio" value="Artes" />Artes</label>
+          <label><input type="checkbox" name="componentesMedio" value="Língua Inglesa" />Língua Inglesa</label>
+          <label><input type="checkbox" name="componentesMedio" value="Matemática" />Matemática</label>
+          <label><input type="checkbox" name="componentesMedio" value="Língua Espanhola" />Língua Espanhola</label>
+          <label><input type="checkbox" name="componentesMedio" value="Educação Física" />Educação Física</label>
+          <label><input type="checkbox" name="componentesMedio" value="Biologia" />Biologia</label>
+          <label><input type="checkbox" name="componentesMedio" value="Química" />Química</label>
+          <label><input type="checkbox" name="componentesMedio" value="Sociologia" />Sociologia</label>
+          <label><input type="checkbox" name="componentesMedio" value="História" />História</label>
+          <label><input type="checkbox" name="componentesMedio" value="Geografia" />Geografia</label>
+          <label><input type="checkbox" name="componentesMedio" value="Filosofia" />Filosofia</label>
+          <label><input type="checkbox" name="componentesMedio" value="Língua Portuguesa" />Língua Portuguesa</label>
+        </div>
+      </div>
+
+      <!-- Seção EXTRAS (exibir sempre, ou condicional) -->
+      <div class="section-extras">
+        <h3>Extras</h3>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="extras" value="SARESP" />Questões (SARESP)</label>
+          <label><input type="checkbox" name="extras" value="ANA" />Questões (ANA)</label>
+          <label><input type="checkbox" name="extras" value="ENEM" />Questões (ENEM)</label>
+          <label><input type="checkbox" name="extras" value="PROVA PAULISTA" />Questões (PROVA PAULISTA)</label>
+        </div>
+      </div>
+
+      <button class="btn-continue" id="btnCreate">CRIAR</button>
+    </div>
+  </div>
+
+  <!-- Script principal -->
+  <script src="../js/script.js"></script>
+  <!-- Script para Minhas Provas -->
+  <script src="../js/minhas-provas.js"></script>
+</body>
+</html>

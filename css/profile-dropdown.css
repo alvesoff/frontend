@@ -1,0 +1,111 @@
+/* 
+  profile-dropdown.css
+  Estilos para o menu dropdown do perfil do usuário
+*/
+
+/* Container do perfil com posicionamento relativo para o dropdown */
+.user-profile {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Estilo do dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 220px;
+  padding: 0.75rem 0;
+  z-index: 100;
+  display: none; /* Inicialmente oculto */
+  margin-top: 10px;
+  border: 1px solid #eee;
+}
+
+/* Mostrar o dropdown quando a classe .show é adicionada via JavaScript */
+.profile-dropdown.show {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Animação de fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cabeçalho do dropdown com informações do usuário */
+.dropdown-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0.5rem;
+}
+
+.dropdown-header h3 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+}
+
+.dropdown-header p {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Itens do menu dropdown */
+.dropdown-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu a {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+/* Ícones nos itens do menu */
+.dropdown-menu .menu-icon {
+  margin-right: 0.75rem;
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+/* Separador entre grupos de itens */
+.dropdown-divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 0.5rem 0;
+}
+
+/* Item de logout com cor diferente */
+.dropdown-menu .logout-item {
+  color: #e74c3c;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+  .profile-dropdown {
+    width: 200px;
+    right: -10px; /* Ajuste para melhor posicionamento em telas pequenas */
+  }
+}

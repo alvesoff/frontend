@@ -1,0 +1,181 @@
+/* ===========================
+   MINHAS PROVAS CSS
+=========================== */
+
+/* Container de provas */
+.provas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Card de prova */
+.prova-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+}
+
+.prova-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Indicador de status */
+.prova-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background-color: #ccc;
+}
+
+.prova-card.status-aplicada::before {
+  background-color: #4CAF50; /* Verde para provas aplicadas */
+}
+
+.prova-card.status-pendente::before {
+  background-color: #FFC107; /* Amarelo para provas pendentes */
+}
+
+/* Título da prova */
+.prova-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Informações da prova */
+.prova-info {
+  margin-bottom: 0.5rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.prova-info p {
+  margin: 0.3rem 0;
+  font-size: 0.75rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botões de ação */
+.prova-acoes {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  margin-top: auto;
+}
+
+.prova-acoes button {
+  padding: 0.3rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-visualizar {
+  background-color: #0020F2;
+  color: white;
+}
+
+.btn-visualizar:hover {
+  background-color: #001ad9;
+}
+
+.btn-editar {
+  background-color: #FFC107;
+  color: #333;
+}
+
+.btn-editar:hover {
+  background-color: #e6af06;
+}
+
+.btn-relatorio {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-relatorio:hover {
+  background-color: #3d8b40;
+}
+
+/* Mensagem quando não há provas */
+.sem-provas {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Modal de detalhes da prova */
+.prova-detalhes {
+  margin: 1.5rem 0;
+}
+
+.prova-detalhes p {
+  margin: 0.8rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.modal-acoes {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Responsividade */
+@media (min-width: 768px) {
+  .provas-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .provas-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .provas-container {
+    grid-template-columns: 1fr;
+    max-width: 280px;
+  }
+  
+  .prova-acoes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .prova-acoes button {
+    width: 100%;
+  }
+}

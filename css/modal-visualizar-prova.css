@@ -1,0 +1,226 @@
+/* modal-visualizar-prova.css */
+
+/* Modal Content */
+.modal-content-visualizar-prova {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.25rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+/* Close Button */
+.modal-content-visualizar-prova .close-modal-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.modal-content-visualizar-prova .close-modal-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.modal-content-visualizar-prova .close-modal-btn:focus {
+  outline: 2px solid #0020F2;
+  outline-offset: 2px;
+}
+
+/* Selected Question Styles */
+.selected-question {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.selected-question:hover {
+  background-color: #f8f9fa;
+}
+
+/* Question List Styles */
+.selected-question ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+}
+
+.selected-question ul li {
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.selected-question ul li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Alternative Letter Styles */
+.selected-question .alternative-letter {
+  font-weight: 600;
+  margin-right: 0.75rem;
+  color: #0020F2;
+}
+
+/* Delete Button Only */
+.modal-content-visualizar-prova .delete-question {
+  margin: 0.3rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background: #fff0f0;
+  color: #dc3545;
+}
+
+.modal-content-visualizar-prova .delete-question:hover {
+  background: #ffe5e5;
+}
+
+/* Export Button */
+#finalizarProvaBtn {
+  background: #0020F2;
+  color: #fff;
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+#finalizarProvaBtn:hover {
+  background: #001ad9;
+}
+
+#finalizarProvaBtn:focus {
+  outline: 2px solid #0020F2;
+  outline-offset: 2px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .modal-content-visualizar-prova {
+    width: 95%;
+    padding: 1rem;
+  }
+  
+  .selected-question {
+    padding: 0.75rem;
+  }
+  
+  #finalizarProvaBtn {
+    padding: 0.75rem;
+  }
+}
+
+
+
+/* Conteúdo do modal Visualizar Prova */
+.modal-content-visualizar-prova {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão de fechar modal */
+.modal-content-visualizar-prova .close-modal-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Estilo para cada questão selecionada */
+.selected-question {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Remover marcadores (pontos) das listas */
+.selected-question ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+/* Estilo dos itens da lista de alternativas */
+.selected-question ul li {
+  margin: 0.3rem 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Destaque para as letras das alternativas */
+.selected-question .alternative-letter {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* Botões de editar e excluir dentro do modal */
+.modal-content-visualizar-prova .edit-question,
+.modal-content-visualizar-prova .delete-question {
+  margin: 0.2rem;
+  background: #ccc;
+  color: #333;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Botão de finalizar prova com destaque */
+#exportBtn {
+  background: #0020F2;
+  color: #fff;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Design mobile-first: ajustes para telas pequenas */
+@media (max-width: 600px) {
+  .modal-content-visualizar-prova {
+    width: 95%;
+    padding: 0.8rem;
+  }
+  #exportBtn {
+    font-size: 0.9rem;
+  }
+}
+  

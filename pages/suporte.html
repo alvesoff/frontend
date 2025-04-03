@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Suporte</title>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+  <!-- API Config -->
+  <script src="/js/api-config.js"></script>
+  <style>
+    .support-container {
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 2rem;
+    }
+    
+    .support-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+    
+    .support-title {
+      color: #333;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .support-message {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .support-contact {
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .support-contact h3 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    
+    .support-email {
+      color: #0020F2;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    .btn-voltar {
+      display: inline-block;
+      background-color: #0020F2;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 2rem;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-voltar:hover {
+      background-color: #001ac9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-top">Educa</span>
+        <span class="logo-bottom">Smart</span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Container principal -->
+  <main class="container support-container">
+    <div class="support-card">
+      <h1 class="support-title">Recuperação de Senha</h1>
+      <p class="support-message">
+        Para recuperar sua senha de acesso ao sistema, por favor, entre em contato com nossa equipe de suporte. 
+        Nossa equipe está disponível para ajudá-lo a recuperar seu acesso de forma segura.
+      </p>
+      <div class="support-contact">
+        <h3>Contato do Suporte</h3>
+        <a href="mailto:suporte@educasmart.com.br" class="support-email">suporte@educasmart.com.br</a>
+      </div>
+      <div style="text-align: center;">
+        <a href="/pages/login-professor.html" class="btn-voltar">Voltar para o Login</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

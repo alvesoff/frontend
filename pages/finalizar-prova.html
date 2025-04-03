@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Finalização da Prova</title>
+  <!-- CSS principal para esta página -->
+  <link rel="stylesheet" href="/css/finalizar-prova.css">
+  <link rel="stylesheet" href="/css/modal2.css">
+  <link rel="stylesheet" href="/css/question-image.css">
+  <!-- Novo CSS específico para o modal de Visualizar Prova -->
+  <link rel="stylesheet" href="/css/modal-visualizar-prova.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <!-- jsPDF para geração de PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- API Config -->
+  <script src="/js/api-config.js"></script>
+</head>
+<body>
+  
+  <!-- Barra superior -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <button class="btn-voltar" id="btnVoltar">VOLTAR</button>
+      <h1 class="page-title">Finalização da Prova</h1>
+    </div>
+    <div class="top-bar-right">
+      <button class="btn-secondary" id="btnEditar">Editar</button>
+      <button class="btn-primary" id="btnVisualizar">Visualizar Prova</button>
+      <button class="btn-outline" id="btnAddQuestaoPessoal">+ Adicionar questão pessoal</button>
+    </div>
+  </header>
+
+  <!-- Container principal -->
+  <main class="container">
+    <!-- Formulário: Nome da Prova e Nº de Questões -->
+    <section class="form-section">
+      <div class="input-group">
+        <label for="nomeProva">Nome da Prova</label>
+        <input type="text" id="nomeProva" placeholder="Ex.: Prova de Matemática 2º bimestre" readonly>
+        <div id="dadosSelecionados"></div>
+      </div>
+      <div class="input-group">
+        <label for="numeroQuestoes">Nº de Questões</label>
+        <input type="number" id="numeroQuestoes" placeholder="Ex.: 10" max="90">
+      </div>
+    </section>
+
+    <!-- Campo de busca e link para BNCC -->
+    <section class="search-section">
+      <div class="search-box">
+        <input type="text" id="searchBNCC" placeholder="Pesquisar por Palavra-Chave ou Código da BNCC">
+        <button class="btn-search" id="btnSearch">Buscar</button>
+      </div>
+      <a href="#" class="bncc-link">Quais são os códigos das habilidades da BNCC?</a>
+    </section>
+
+    <!-- Listagem de Questões -->
+    <section class="questions-section">
+      <!-- Questão fixa exemplo 1 -->
+      <div class="question-card">
+        <div class="question-header">
+          <span class="question-info">Questão Matemática | (Ensino Fundamental, Anos Iniciais)</span>
+          <span class="question-difficulty">PADRÃO</span>
+        </div>
+        <p class="question-enunciado">Uma loja tinha 500 pratos de cerâmica. Chegaram, na mesma semana, mais 300 pratos para o estoque e, na parte da tarde, ...</p>
+        <ul class="question-alternativas">
+          <li>a) 500 pratos</li>
+          <li class="correct-alternative">b) 750 pratos</li>
+          <li>c) 800 pratos</li>
+          <li>d) 1000 pratos</li>
+        </ul>
+        <button class="btn-add-questao">ADICIONAR</button>
+      </div>
+
+      <!-- Questão fixa exemplo 2 -->
+      <div class="question-card">
+        <div class="question-header">
+          <span class="question-info">Questão Matemática | (Ensino Médio)</span>
+          <span class="question-difficulty">PADRÃO</span>
+        </div>
+        <p class="question-enunciado">Foram doados 200 pratos. Calcule o quantitativo de pratos que ficou no final do dia...</p>
+        <ul class="question-alternativas">
+          <li>a) 450 pratos</li>
+          <li class="correct-alternative">b) 550 pratos</li>
+          <li>c) 700 pratos</li>
+          <li>d) 1000 pratos</li>
+        </ul>
+        <button class="btn-add-questao">ADICIONAR</button>
+      </div>
+      <!-- Questões pessoais serão inseridas dinamicamente -->
+    </section>
+  </main>
+
+  <!-- MODAL: ADICIONAR QUESTÃO PESSOAL -->
+  <div id="modalAddQuestao" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content modal-content-add-question">
+      <button id="closeModalAddQuestao" class="close-modal-btn" aria-label="Fechar modal">&times;</button>
+      
+      <h2>Adicionar Questão Pessoal</h2>
+      <form id="formAddQuestao">
+        <div class="form-group">
+          <label for="questionText">Enunciado da Questão</label>
+          <div id="questionText" contenteditable="true" class="rich-text-editor" 
+               placeholder="Digite o enunciado da questão..." aria-required="true"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="fileAttachment" class="file-input-label">
+            <span>Adicionar Anexo</span>
+            <small>(Imagens ou PDF)</small>
+          </label>
+          <input type="file" id="fileAttachment" accept="image/*,application/pdf" />
+        </div>
+
+        <div class="form-group">
+          <label for="seriesIndicada">Série/Ano Indicada</label>
+          <select id="seriesIndicada" name="seriesIndicada" required>
+            <option value="">Selecione a série...</option>
+            <option value="1º Ano">1º Ano</option>
+            <option value="2º Ano">2º Ano</option>
+            <option value="3º Ano">3º Ano</option>
+            <option value="4º Ano">4º Ano</option>
+            <option value="5º Ano">5º Ano</option>
+            <option value="6º Ano">6º Ano</option>
+            <option value="7º Ano">7º Ano</option>
+            <option value="8º Ano">8º Ano</option>
+            <option value="9º Ano">9º Ano</option>
+            <option value="1º Ano do Ensino Médio">1º Ano - E.M.</option>
+            <option value="2º Ano do Ensino Médio">2º Ano - E.M.</option>
+            <option value="3º Ano do Ensino Médio">3º Ano - E.M.</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="difficulty">Nível de dificuldade</label>
+          <select id="difficulty" required>
+            <option value="FÁCIL">FÁCIL</option>
+            <option value="PADRÃO" selected>PADRÃO</option>
+            <option value="DIFÍCIL">DIFÍCIL</option>
+          </select>
+        </div>
+
+        <fieldset id="alternativesFieldset">
+          <legend>Alternativas</legend>
+          <div class="alternatives-container">
+            <div class="alternative">
+              <span class="alternative-letter">A</span>
+              <input type="text" name="alternativeText[]" placeholder="Digite a alternativa" required>
+              <input type="radio" name="correctAlternative" value="0" required>
+            </div>
+            <div class="alternative">
+              <span class="alternative-letter">B</span>
+              <input type="text" name="alternativeText[]" placeholder="Digite a alternativa" required>
+              <input type="radio" name="correctAlternative" value="1">
+            </div>
+            <div class="alternative">
+              <span class="alternative-letter">C</span>
+              <input type="text" name="alternativeText[]" placeholder="Digite a alternativa" required>
+              <input type="radio" name="correctAlternative" value="2">
+            </div>
+            <div class="alternative">
+              <span class="alternative-letter">D</span>
+              <input type="text" name="alternativeText[]" placeholder="Digite a alternativa" required>
+              <input type="radio" name="correctAlternative" value="3">
+            </div>
+          </div>
+        </fieldset>
+
+        <button type="submit" id="btnSalvarQuestao" class="btn-add-personal-question">
+          Adicionar Questão
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: VISUALIZAR PROVA -->
+  <div id="modalVisualizarProva" class="modal-overlay" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-content modal-content-visualizar-prova">
+      <button id="closeModalVisualizarProva" class="close-modal-btn" aria-label="Fechar modal">&times;</button>
+      <h2>Visualizar Prova</h2>
+      <!-- Aqui os dados das questões selecionadas são exibidos; o enunciado é exibido como texto estático -->
+      <div id="selectedQuestionsList"></div>
+      <button id="finalizarProvaBtn" class="btn-primary">Finalizar e Gerar Prova</button>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>© 2025 Educa Smart. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module">
+import { salvarProvaComCodigo, gerarCodigoProva } from '/js/prova-codigo.module.js';
+window.salvarProvaComCodigo = salvarProvaComCodigo;
+window.gerarCodigoProva = gerarCodigoProva;
+</script>
+  <script src="/js/finalizar-prova.js"></script>
+  <script src="/js/Modalquest.js"></script>
+</body>
+</html>
+
+
+<!-- js/finalizar-prova.js  -->

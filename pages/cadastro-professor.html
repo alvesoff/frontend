@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Cadastro de Professor</title>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- CSS específico para login -->
+  <link rel="stylesheet" href="/css/login-professor.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <!-- Cabeçalho -->
+  <header class="header">
+    <nav class="navbar">
+      <!-- Logo ou nome do sistema -->
+      <div class="logo">
+        <span class="logo-top">Educa</span>
+        <span class="logo-bottom">Smart</span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Container principal -->
+  <main class="container login-container">
+    <div class="login-card">
+      <h1>Cadastro de Professor</h1>
+      <p class="login-subtitle">Preencha os dados para criar sua conta</p>
+      
+      <form id="cadastroForm" class="login-form">
+        <div class="form-group">
+          <label for="nome">Nome Completo</label>
+          <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmarSenha">Confirmar Senha</label>
+          <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirme sua senha" required>
+        </div>
+        
+
+        
+        <button type="submit" class="btn-primary btn-login">Cadastrar</button>
+      </form>
+      
+      <div class="login-footer">
+        <p>Já possui uma conta? <a href="/pages/login-professor.html">Faça login</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>&copy; 2023 Educa Smart - Todos os direitos reservados</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="/js/api-config.js"></script>
+  <script src="/js/protect-cadastro.js"></script>
+  <script src="/js/cadastro-professor.js"></script>
+</body>
+</html>

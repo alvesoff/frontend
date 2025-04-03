@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Realizar Prova</title>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- CSS específico para realizar prova (a ser criado) -->
+  <link rel="stylesheet" href="/css/realizar-prova.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- API Config -->
+  <script src="/js/api-config.js"></script>
+</head>
+<body>
+  
+  <!-- Cabeçalho -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <h1 class="page-title">Realizando Prova</h1>
+    </div>
+    <div class="top-bar-right">
+      <div id="timer" class="timer">Tempo restante: 00:00:00</div>
+      <button class="btn-primary" id="btnFinalizarProva">Finalizar Prova</button>
+    </div>
+  </header>
+
+  <!-- Container principal -->
+  <main class="container">
+    <div class="prova-info">
+      <h2 id="provaTitle">Carregando prova...</h2>
+      <p id="alunoInfo">Aluno: Carregando...</p>
+    </div>
+
+    <div class="questoes-container" id="questoesContainer">
+      <!-- As questões serão carregadas dinamicamente aqui -->
+      <div class="loading">Carregando questões...</div>
+    </div>
+  </main>
+
+  <!-- Modal de confirmação para finalizar a prova -->
+  <div id="modalConfirmacao" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>Finalizar Prova</h3>
+      <p>Tem certeza que deseja finalizar a prova? Esta ação não pode ser desfeita.</p>
+      <div class="modal-buttons">
+        <button id="btnCancelarFinalizacao" class="btn-secondary">Cancelar</button>
+        <button id="btnConfirmarFinalizacao" class="btn-primary">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de resultado -->
+  <div id="modalResultado" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>Resultado da Prova</h3>
+      <div id="resultadoConteudo">
+        <!-- Resultado será exibido aqui -->
+      </div>
+      <button id="btnFecharResultado" class="btn-primary">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>&copy; 2025 Educa Smart - Todos os direitos reservados</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="/js/prova-codigo.js"></script>
+  <script src="/js/realizar-prova.js"></script>
+</body>
+</html>
