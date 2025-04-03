@@ -85,7 +85,7 @@ const API_CONFIG = {
       
       registro: async function(usuarioData) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/usuarios/registro`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/usuarios/registro`, {
             method: 'POST',
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify(usuarioData)
@@ -102,7 +102,7 @@ const API_CONFIG = {
     provas: {
       getAll: async function() {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/provas`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas`, {
             method: 'GET',
             headers: API_CONFIG.getAuthHeaders()
           });
@@ -115,7 +115,7 @@ const API_CONFIG = {
       
       getById: async function(id) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/provas/${id}`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas/${id}`, {
             method: 'GET',
             headers: API_CONFIG.getAuthHeaders()
           });
@@ -128,7 +128,7 @@ const API_CONFIG = {
       
       getByCodigo: async function(codigo) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/provas/codigo/${codigo}`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas/codigo/${codigo}`, {
             method: 'GET',
             headers: API_CONFIG.getHeaders()
           });
@@ -141,7 +141,7 @@ const API_CONFIG = {
       
       create: async function(provaData) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/provas`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas`, {
             method: 'POST',
             headers: API_CONFIG.getAuthHeaders(),
             body: JSON.stringify(provaData)
@@ -158,7 +158,7 @@ const API_CONFIG = {
     resultados: {
       getAll: async function() {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/resultados`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/resultados`, {
             method: 'GET',
             headers: API_CONFIG.getAuthHeaders()
           });
@@ -171,7 +171,7 @@ const API_CONFIG = {
       
       create: async function(resultadoData) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/resultados`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/resultados`, {
             method: 'POST',
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify(resultadoData)
