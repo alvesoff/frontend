@@ -54,7 +54,7 @@ const API_CONFIG = {
     auth: {
       login: async function(email, senha) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/usuarios/login`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/usuarios/login`, {
             method: 'POST',
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify({ email, senha })
@@ -71,7 +71,7 @@ const API_CONFIG = {
     usuarios: {
       login: async function(email, senha) {
         try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}/usuarios/login`, {
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/usuarios/login`, {
             method: 'POST',
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify({ email, senha })
