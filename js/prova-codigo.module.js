@@ -92,7 +92,7 @@ export async function salvarProvaComCodigo(provaData) {
       provaFormatada.professor = professorId;
 
       // Tentar enviar para o backend
-      fetch(`${API_URL}/provas`, {
+      fetch(`${API_URL}/api/provas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

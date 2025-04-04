@@ -19,7 +19,7 @@ async function buscarMinhasProvas() {
     if (!verificarLogin()) return [];
     
     // Buscar provas do professor
-    const response = await fetch(`${API_URL}/provas`, {
+    const response = await fetch(`${API_URL}/api/provas`, {
       method: 'GET',
       headers: API_CONFIG.getAuthHeaders()
     });

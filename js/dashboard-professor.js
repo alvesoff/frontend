@@ -21,7 +21,7 @@ async function buscarDadosProfessor() {
     const token = getToken();
     
     // Buscar provas do professor
-    const provasResponse = await fetch(`${API_URL}/provas`, {
+    const provasResponse = await fetch(`${API_URL}/api/provas`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ async function atualizarTabelaResultados(resultados) {
       if (!prova) {
         // Se não encontrou nos dados simulados, tenta buscar da API
         try {
-          const response = await fetch(`${API_URL}/provas/${resultado.provaId}`, {
+          const response = await fetch(`${API_URL}/api/provas/${resultado.provaId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -692,7 +692,7 @@ async function mostrarDetalhesProva(resultado) {
     if (!prova) {
       // Se não encontrou nos dados simulados, tenta buscar da API
       try {
-        const response = await fetch(`${API_URL}/provas/${resultado.provaId}`, {
+        const response = await fetch(`${API_URL}/api/provas/${resultado.provaId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -804,7 +804,7 @@ async function exportarRelatorio() {
   
   for (const resultado of resultadosFiltrados) {
     try {
-      const response = await fetch(`${API_URL}/provas/${resultado.provaId}`, {
+      const response = await fetch(`${API_URL}/api/provas/${resultado.provaId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

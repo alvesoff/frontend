@@ -174,7 +174,7 @@ async function salvarProvaComCodigo(provaData) {
     
     // Enviar prova para o backend
     try {
-      const response = await fetch(`${API_URL}/provas`, {
+      const response = await fetch(`${API_URL}/api/provas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ async function buscarProvaPorCodigo(codigo) {
     const API_URL = API_CONFIG.BASE_URL;
     
     // Removida a verificação de token para permitir acesso público às provas
-    const response = await fetch(`${API_URL}/provas/${codigo}`, {
+    const response = await fetch(`${API_URL}/api/provas/${codigo}`, {
       method: 'GET'
       // Removido o cabeçalho com token
     });

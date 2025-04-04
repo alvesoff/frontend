@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       // Enviar prova para o backend
-      const response = await fetch(`${API_URL}/provas`, {
+      const response = await fetch(`${API_URL}/api/provas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
