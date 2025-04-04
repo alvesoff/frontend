@@ -282,12 +282,6 @@ html, body {
   font-size: 0.8rem;
   white-space: nowrap;
 }
-.btn-primary,
-.btn-outline {
-  min-width: 200px;
-  text-align: center;
-  white-space: nowrap;
-}
 
 /* Para telas maiores, ajuste do padding e fonte */
 @media (min-width: 768px) {
@@ -297,6 +291,7 @@ html, body {
   }
 }
 
+
 /* Estilo para o select de dificuldade no modal */
 #difficulty {
   padding: 0.5rem;
@@ -305,3 +300,4 @@ html, body {
   font-size: 0.95rem;
   margin-bottom: 1rem;
 }
+
