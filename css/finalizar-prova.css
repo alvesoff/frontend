@@ -282,6 +282,12 @@ html, body {
   font-size: 0.8rem;
   white-space: nowrap;
 }
+.btn-primary,
+.btn-outline {
+  min-width: 200px;
+  text-align: center;
+  white-space: nowrap;
+}
 
 /* Para telas maiores, ajuste do padding e fonte */
 @media (min-width: 768px) {
