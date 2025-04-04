@@ -48,8 +48,8 @@ async function registrarAcessoAluno(studentInfo, prova) {
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
   
-  // URL da API
-  const API_URL = 'http://localhost:3001/api';
+  // Usar a configuração centralizada da API
+  // A URL já está sendo usada nas chamadas fetch abaixo
   
   // Handle form submission
   if (loginForm) {

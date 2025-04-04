@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
       alunoInfo.textContent = `Aluno: ${aluno.name} | Turma: ${aluno.class}`;
       
       // Carregar a prova diretamente do banco de dados usando o código da prova
-      const response = await fetch(`${API_CONFIG.BASE_URL}/provas/codigo/${aluno.examCode}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas/codigo/${aluno.examCode}`, {
         method: 'GET',
         headers: API_CONFIG.getHeaders()
       });
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     try {
       // Verificar se temos a versão mais recente da prova
-      const response = await fetch(`${API_CONFIG.BASE_URL}/provas/codigo/${aluno.examCode}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas/codigo/${aluno.examCode}`, {
         method: 'GET',
         headers: API_CONFIG.getHeaders()
       });
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Enviar resultado para o backend usando a rota correta
       try {
-        const response = await fetch(`${API_CONFIG.BASE_URL}/resultados/finalizar`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/api/resultados/finalizar`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

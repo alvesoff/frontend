@@ -80,8 +80,8 @@ async function comprimirImagem(base64Image, maxWidth = 800, quality = 0.7) {
  * @returns {Promise<string>} Código da prova gerado
  */
 async function salvarProvaComCodigo(provaData) {
-  // URL da API
-  const API_URL = 'http://localhost:3001/api';
+  // Usar a configuração centralizada da API
+  const API_URL = API_CONFIG.BASE_URL;
   
   // Garantir que a data de criação está definida
   provaData.dataCriacao = new Date().toISOString();
@@ -219,8 +219,8 @@ async function salvarProvaComCodigo(provaData) {
  */
 async function buscarProvaPorCodigo(codigo) {
   try {
-    // URL da API
-    const API_URL = 'http://localhost:3001/api';
+    // Usar a configuração centralizada da API
+    const API_URL = API_CONFIG.BASE_URL;
     
     // Removida a verificação de token para permitir acesso público às provas
     const response = await fetch(`${API_URL}/provas/${codigo}`, {
@@ -273,8 +273,8 @@ async function verificarPermissaoAcesso(codigo, turma) {
  */
 async function registrarAcessoAluno(alunoInfo, provaInfo) {
   try {
-    // URL da API
-    const API_URL = 'http://localhost:3001/api';
+    // Usar a configuração centralizada da API
+    const API_URL = API_CONFIG.BASE_URL;
     
     const token = localStorage.getItem('token');
     

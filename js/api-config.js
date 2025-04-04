@@ -59,6 +59,10 @@ const API_CONFIG = {
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify({ email, senha })
           });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.msg || 'Erro na autenticação');
+          }
           return await response.json();
         } catch (error) {
           console.error('Erro na autenticação:', error);
@@ -76,6 +80,10 @@ const API_CONFIG = {
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify({ email, senha })
           });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.msg || 'Erro na autenticação');
+          }
           return await response.json();
         } catch (error) {
           console.error('Erro na autenticação:', error);
@@ -90,6 +98,10 @@ const API_CONFIG = {
             headers: API_CONFIG.getHeaders(),
             body: JSON.stringify(usuarioData)
           });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.msg || 'Erro no registro');
+          }
           return await response.json();
         } catch (error) {
           console.error('Erro no registro:', error);

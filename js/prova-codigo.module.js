@@ -53,7 +53,7 @@ export async function salvarProvaComCodigo(provaData) {
     // Tentar salvar no backend de forma assíncrona, mas não depender do resultado
     // Isso é opcional e não afeta o fluxo principal
     try {
-      const API_URL = 'http://localhost:3001/api';
+      const API_URL = API_CONFIG.BASE_URL;
       
       // Mapear os dados da prova para o formato esperado pelo backend
       const provaFormatada = {
@@ -92,7 +92,7 @@ export async function salvarProvaComCodigo(provaData) {
       provaFormatada.professor = professorId;
 
       // Tentar enviar para o backend
-      fetch(`${API_URL}/provas`, {
+      fetch(`${API_URL}/api/provas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

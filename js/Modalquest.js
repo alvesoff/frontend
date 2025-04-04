@@ -6,7 +6,7 @@
 if (typeof API_CONFIG === 'undefined') {
   console.warn('API_CONFIG não encontrado, usando configuração padrão');
   window.API_CONFIG = {
-    BASE_URL: 'http://localhost:3001/api',
+    BASE_URL: 'https://api-educasmart.onrender.com',
     getToken: function() {
       return localStorage.getItem('token');
     },
