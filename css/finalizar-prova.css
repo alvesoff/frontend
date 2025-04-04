@@ -291,7 +291,6 @@ html, body {
   }
 }
 
-
 /* Estilo para o select de dificuldade no modal */
 #difficulty {
   padding: 0.5rem;
@@ -300,4 +299,3 @@ html, body {
   font-size: 0.95rem;
   margin-bottom: 1rem;
 }
-
