@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         // Enviar para o backend
-        const response = await fetch(`${API_URL}/questoes-pessoais`, {
+        const response = await fetch(`${API_URL}/api/questoes-pessoais`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
