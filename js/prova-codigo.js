@@ -284,7 +284,7 @@ async function registrarAcessoAluno(alunoInfo, provaInfo) {
       return;
     }
     
-    await fetch(`${API_URL}/acessos`, {
+    await fetch(`${API_URL}/api/acessos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

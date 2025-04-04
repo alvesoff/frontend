@@ -20,7 +20,7 @@ async function registrarAcessoAluno(studentInfo, prova) {
     console.log('Dados de acesso preparados:', acessoData);
     
     // Enviar dados para o backend
-    const response = await fetch(`${API_CONFIG.BASE_URL}/resultados/registrar-acesso`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/resultados/registrar-acesso`, {
       method: 'POST',
       headers: API_CONFIG.getHeaders(),
       body: JSON.stringify(acessoData)
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       try {
         // Busca a prova pelo código informado no backend
-        const response = await fetch(`${API_CONFIG.BASE_URL}/provas/codigo/${examCode}`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/api/provas/codigo/${examCode}`, {
           method: 'GET',
           headers: API_CONFIG.getHeaders()
         });
