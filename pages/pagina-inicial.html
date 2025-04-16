@@ -24,13 +24,12 @@
 
   <!-- Conteúdo da página principal (header, busca, hero, etc.) -->
   <header class="header">
-    <nav class="navbar">
+    <nav class="navbar" style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.2rem 2rem;">
       <!-- Logo ou nome do sistema -->
-      <div class="logo">
-        <span class="logo-top">Educa</span>
-        <span class="logo-bottom">Smart</span>
+      <div class="logo" style="text-align: center;">
+        <span class="logo-top" style="display: block; font-size: 2.2rem; font-weight: 800; color: #3a86ff; letter-spacing: 2px;">Educa</span>
+        <span class="logo-bottom" style="display: block; font-size: 1.4rem; font-weight: 600; color: #ffbe0b; letter-spacing: 1px; margin-top: -0.5rem;">Smart</span>
       </div>
-      <!-- Ícone de usuário com dropdown -->
       <div class="user-profile" id="userProfile">
         <img src="../img/user-icon.png" alt="Usuário" />
         <!-- Dropdown menu do perfil -->
@@ -65,23 +64,23 @@
         Planeje Simulados em <br>
         apenas <span>5 minutos</span>
       </h1>
-      <div class="button-group" id="meu-botao">
+      <div class="button-group" id="meu-botao" style="gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; justify-content: center;">
         <!-- Botão que abre o 1º modal (Escolaridade) -->
         <button class="btn-primary" id="openModalBtn">Gerar Prova</button>
-        <button class="btn-primary">Corrigir Provas</button>
-        <button class="btn-primary">Questões Favoritas</button>
-        <button class="btn-primary">Relatórios de Provas Realizadas</button>
+        <button class="btn-primary btn-yellow">Corrigir Provas</button>
+        <button class="btn-primary btn-green">Questões Favoritas</button>
+        <button class="btn-primary btn-purple">Relatórios de Provas Realizadas</button>
       </div>
       
       <!-- Botões de acesso rápido -->
-      <div class="access-buttons">
-        <a href="login-aluno.html" class="btn-access">Acesso do Aluno</a>
-        <a href="dashboard-professor.html" class="btn-access">Dashboard</a>
+      <div class="access-buttons" style="gap: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap;">
+        <a href="login-aluno.html" class="btn-access" style="background: #fff; color: #3a86ff; border: 2px solid #3a86ff; border-radius: 2rem; font-weight: 700; padding: 0.7rem 1.8rem; font-size: 1rem; transition: background 0.2s, color 0.2s;">Acesso do Aluno</a>
+        <a href="dashboard-professor.html" class="btn-access" style="background: #fff; color: #ffbe0b; border: 2px solid #ffbe0b; border-radius: 2rem; font-weight: 700; padding: 0.7rem 1.8rem; font-size: 1rem; transition: background 0.2s, color 0.2s;">Dashboard</a>
       </div>
     </section>
 
     <div class="main-image">
-      <img src="../img/blocks-kids.png" alt="Desenho de crianças com blocos" class="responsive-image" />
+      <img src="../img/blocks-kids.png" alt="Desenho de crianças com blocos" class="responsive-image" style="width: 60%; max-width: 300px;" />
     </div>
   </main>
 

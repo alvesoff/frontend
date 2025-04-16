@@ -72,6 +72,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
+      // Validar disciplina
+      const disciplinaQuestao = document.getElementById('disciplinaQuestao');
+      if (!disciplinaQuestao.value) {
+        alert('Por favor, selecione a disciplina.');
+        return;
+      }
+      
       if (!seriesIndicada.value) {
         alert('Por favor, selecione a série indicada.');
         return;
@@ -93,6 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Por favor, selecione a alternativa correta.');
         return;
       }
+      
+      // Obter tags
+      const tagsQuestao = document.getElementById('tagsQuestao');
+      const tags = tagsQuestao.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '')
       
       // Processar imagem se existir
       let imagemBase64 = null;
@@ -118,8 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
         alternativas: alternatives,
         correctAlternative: parseInt(correctAlternative.value),
         series: seriesIndicada.value,
+        disciplina: disciplinaQuestao.value,
         difficulty: difficulty.value,
-        imagem: imagemBase64 // Adicionar imagem se existir
+        imagem: imagemBase64, // Adicionar imagem se existir
+        tags: tags
       };
       
       // Salvar no banco de dados
@@ -145,15 +158,15 @@ document.addEventListener('DOMContentLoaded', function() {
           alternativas: alternativasFormatadas,
           dificuldade: difficulty.value,
           serie: seriesIndicada.value,
+          disciplina: disciplinaQuestao.value,
+          tags: tags,
           imagem: imagemBase64
         };
         
         // Enviar para o backend
         const response = await fetch(`${API_URL}/api/questoes-pessoais`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: API_CONFIG.getAuthHeaders(),
           body: JSON.stringify(questaoPessoalData)
         });
         

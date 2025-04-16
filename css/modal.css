@@ -98,14 +98,20 @@
   
   /* Botão "Continuar" ou "Criar" */
   .btn-continue {
-    background-color: #333;
+    background: linear-gradient(90deg, #3a86ff 60%, #4361ee 100%);
     color: #fff;
     border: none;
-    padding: 0.8rem;
-    border-radius: 4px;
-    font-size: 1rem;
+    padding: 0.9rem 0;
+    border-radius: 0.8rem;
+    font-size: 1.1rem;
     width: 100%;
     margin-top: 1rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(58,134,255,0.08);
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    letter-spacing: 0.5px;
+    outline: none;
     cursor: pointer;
   }
 

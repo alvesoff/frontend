@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/question-image.css">
   <!-- Novo CSS específico para o modal de Visualizar Prova -->
   <link rel="stylesheet" href="/css/modal-visualizar-prova.css">
+  <!-- Novo CSS específico para o modal de Adicionar Questão Pessoal -->
+  <link rel="stylesheet" href="/css/modal-adicionar-questao.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <!-- jsPDF para geração de PDF -->
@@ -47,51 +49,75 @@
       </div>
     </section>
 
-    <!-- Campo de busca e link para BNCC -->
+    <!-- Filtros de busca -->
     <section class="search-section">
+      <div class="filter-container">
+        <div class="filter-group">
+          <label for="disciplinaFiltro">Disciplina</label>
+          <select id="disciplinaFiltro">
+            <option value="">Todas as disciplinas</option>
+            <option value="Matemática">Matemática</option>
+            <option value="Português">Português</option>
+            <option value="Ciências">Ciências</option>
+            <option value="História">História</option>
+            <option value="Geografia">Geografia</option>
+            <option value="Física">Física</option>
+            <option value="Química">Química</option>
+            <option value="Biologia">Biologia</option>
+            <option value="Inglês">Inglês</option>
+            <option value="Artes">Artes</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="anoEscolarFiltro">Ano Escolar</label>
+          <select id="anoEscolarFiltro">
+            <option value="">Todos os anos</option>
+            <optgroup label="Ensino Fundamental">
+              <option value="1">1º Ano</option>
+              <option value="2">2º Ano</option>
+              <option value="3">3º Ano</option>
+              <option value="4">4º Ano</option>
+              <option value="5">5º Ano</option>
+              <option value="6">6º Ano</option>
+              <option value="7">7º Ano</option>
+              <option value="8">8º Ano</option>
+              <option value="9">9º Ano</option>
+            </optgroup>
+            <optgroup label="Ensino Médio">
+              <option value="10">1º Ano - E.M.</option>
+              <option value="11">2º Ano - E.M.</option>
+              <option value="12">3º Ano - E.M.</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="dificuldadeFiltro">Dificuldade</label>
+          <select id="dificuldadeFiltro">
+            <option value="">Todas</option>
+            <option value="FÁCIL">FÁCIL</option>
+            <option value="PADRÃO">PADRÃO</option>
+            <option value="DIFÍCIL">DIFÍCIL</option>
+          </select>
+        </div>
+      </div>
       <div class="search-box">
         <input type="text" id="searchBNCC" placeholder="Pesquisar por Palavra-Chave ou Código da BNCC">
         <button class="btn-search" id="btnSearch">Buscar</button>
       </div>
+      <div class="filter-group">
+        <label for="tagsFiltro">Tags</label>
+        <input type="text" id="tagsFiltro" placeholder="Ex.: álgebra, geometria, verbos">
+      </div>
+      <button class="btn-filter" id="btnAplicarFiltros">Aplicar Filtros</button>
       <a href="#" class="bncc-link">Quais são os códigos das habilidades da BNCC?</a>
     </section>
 
     <!-- Listagem de Questões -->
     <section class="questions-section">
-      <!-- Questão fixa exemplo 1 -->
-      <div class="question-card">
-        <div class="question-header">
-          <span class="question-info">Questão Matemática | (Ensino Fundamental, Anos Iniciais)</span>
-          <span class="question-difficulty">PADRÃO</span>
-        </div>
-        <p class="question-enunciado">Uma loja tinha 500 pratos de cerâmica. Chegaram, na mesma semana, mais 300 pratos para o estoque e, na parte da tarde, ...</p>
-        <ul class="question-alternativas">
-          <li>a) 500 pratos</li>
-          <li class="correct-alternative">b) 750 pratos</li>
-          <li>c) 800 pratos</li>
-          <li>d) 1000 pratos</li>
-        </ul>
-        <button class="btn-add-questao">ADICIONAR</button>
-      </div>
-
-      <!-- Questão fixa exemplo 2 -->
-      <div class="question-card">
-        <div class="question-header">
-          <span class="question-info">Questão Matemática | (Ensino Médio)</span>
-          <span class="question-difficulty">PADRÃO</span>
-        </div>
-        <p class="question-enunciado">Foram doados 200 pratos. Calcule o quantitativo de pratos que ficou no final do dia...</p>
-        <ul class="question-alternativas">
-          <li>a) 450 pratos</li>
-          <li class="correct-alternative">b) 550 pratos</li>
-          <li>c) 700 pratos</li>
-          <li>d) 1000 pratos</li>
-        </ul>
-        <button class="btn-add-questao">ADICIONAR</button>
-      </div>
-      <!-- Questões pessoais serão inseridas dinamicamente -->
+      <!-- As questões serão carregadas dinamicamente aqui -->
+      <p class="no-questions">Use os filtros acima para buscar questões ou clique em "Aplicar Filtros".</p>
     </section>
-  </main>
+    </main>
 
   <!-- MODAL: ADICIONAR QUESTÃO PESSOAL -->
   <div id="modalAddQuestao" class="modal-overlay" role="dialog" aria-modal="true">
@@ -115,18 +141,35 @@
         </div>
 
         <div class="form-group">
+          <label for="disciplinaQuestao">Disciplina</label>
+          <select id="disciplinaQuestao" name="disciplinaQuestao" required>
+            <option value="">Selecione a disciplina...</option>
+            <option value="Matemática">Matemática</option>
+            <option value="Português">Português</option>
+            <option value="Ciências">Ciências</option>
+            <option value="História">História</option>
+            <option value="Geografia">Geografia</option>
+            <option value="Física">Física</option>
+            <option value="Química">Química</option>
+            <option value="Biologia">Biologia</option>
+            <option value="Inglês">Inglês</option>
+            <option value="Artes">Artes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
           <label for="seriesIndicada">Série/Ano Indicada</label>
           <select id="seriesIndicada" name="seriesIndicada" required>
             <option value="">Selecione a série...</option>
-            <option value="1º Ano">1º Ano</option>
-            <option value="2º Ano">2º Ano</option>
-            <option value="3º Ano">3º Ano</option>
-            <option value="4º Ano">4º Ano</option>
-            <option value="5º Ano">5º Ano</option>
-            <option value="6º Ano">6º Ano</option>
-            <option value="7º Ano">7º Ano</option>
-            <option value="8º Ano">8º Ano</option>
-            <option value="9º Ano">9º Ano</option>
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
+            <option value="4">4º Ano</option>
+            <option value="5">5º Ano</option>
+            <option value="6">6º Ano</option>
+            <option value="7">7º Ano</option>
+            <option value="8">8º Ano</option>
+            <option value="9">9º Ano</option>
             <option value="1º Ano do Ensino Médio">1º Ano - E.M.</option>
             <option value="2º Ano do Ensino Médio">2º Ano - E.M.</option>
             <option value="3º Ano do Ensino Médio">3º Ano - E.M.</option>
@@ -140,6 +183,11 @@
             <option value="PADRÃO" selected>PADRÃO</option>
             <option value="DIFÍCIL">DIFÍCIL</option>
           </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="tagsQuestao">Tags (separadas por vírgula)</label>
+          <input type="text" id="tagsQuestao" placeholder="Ex.: álgebra, geometria, verbos" />
         </div>
 
         <fieldset id="alternativesFieldset">

@@ -26,41 +26,111 @@ select {
 /* ===========================
  CABEÇALHO
 =========================== */
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  font-family: 'Nunito Sans', 'DM Sans', Arial, sans-serif;
+}
+
 .header {
-  width: 100%;
-  background: transparent; /* fundo transparente para ver o gradiente */
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto; /* centraliza no desktop */
+  justify-content: center;
+  padding: 1.2rem 0;
 }
 
-/* Logo / Marca */
 .logo {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
+  text-align: center;
 }
 
 .logo-top {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 700; /* equivalente a Bold */
-  font-size: 1.01rem;
-  letter-spacing: 0.3em;
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #3a86ff;
+  letter-spacing: 2px;
 }
 
 .logo-bottom {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 700; /* equivalente a Bold */
-  font-size: 1.01rem;
-  letter-spacing: 0.3em;
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffbe0b;
+  letter-spacing: 1px;
+  margin-top: -0.5rem;
 }
 
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(58,134,255,0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+  padding: 3rem 2.5rem;
+  max-width: 370px;
+  width: 100%;
+  text-align: center;
+  transition: box-shadow 0.3s;
+}
+
+.btn-primary.btn-login {
+  background: linear-gradient(90deg, #3a86ff 60%, #4361ee 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.9rem 0;
+  border-radius: 0.8rem;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(58,134,255,0.08);
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  letter-spacing: 0.5px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary.btn-login + .btn-primary.btn-login {
+  background: linear-gradient(90deg, #ffbe0b 60%, #fb5607 100%);
+  box-shadow: 0 2px 8px rgba(255,190,11,0.08);
+}
+
+.footer {
+  background: transparent;
+  text-align: center;
+  padding: 1.2rem 0 0.5rem 0;
+  color: #888;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    padding: 2rem 1rem;
+    max-width: 98vw;
+  }
+  .login-container {
+    min-height: 60vh;
+    padding: 1rem 0;
+  }
+  .navbar {
+    padding: 0.7rem 0;
+  }
+  .logo-top {
+    font-size: 1.5rem;
+  }
+  .logo-bottom {
+    font-size: 1rem;
+  }
+}
 /* Busca */
 .search-box {
   display: none;

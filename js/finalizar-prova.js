@@ -23,26 +23,51 @@ btnEditar.addEventListener('click', () => {
   alert("Funcionalidade de edição em breve!");
 });
 
-// Botão BUSCAR
-const btnSearch = document.getElementById('btnSearch');
-btnSearch.addEventListener('click', async () => {
-  const inputSearch = document.getElementById('searchBNCC').value.trim();
-  if (inputSearch === "") {
-    alert("Digite uma palavra-chave ou código da BNCC para buscar questões.");
-    return;
-  }
-  
+// Função para buscar questões com filtros
+async function buscarQuestoes(filtros = {}) {
   try {
     // Usar a configuração global da API
-    const API_URL = API_CONFIG.BASE_URL;
+    const API_URL = API_CONFIG.QUESTOES_API_URL;
+    const token = localStorage.getItem('token');
     
     if (!token) {
       alert('Você precisa estar logado para buscar questões.');
-      return;
+      return [];
     }
     
+    // Construir a URL com os parâmetros de filtro
+    let url = `${API_URL}/api/v1/questoes?`;
+    
+    // Adicionar termo de busca se existir
+    if (filtros.termo) {
+      url += `q=${encodeURIComponent(filtros.termo)}&`;
+    }
+    
+    // Adicionar outros filtros
+    if (filtros.disciplina && filtros.disciplina !== '') {
+      url += `disciplina=${encodeURIComponent(filtros.disciplina)}&`;
+    }
+    
+    if (filtros.anoEscolar && filtros.anoEscolar !== '') {
+      // Tratar o valor do ano escolar para garantir que seja enviado corretamente
+      let anoEscolarValue = filtros.anoEscolar;
+      // Já convertemos os valores no HTML para números, então podemos enviar diretamente
+      url += `anoEscolar=${encodeURIComponent(anoEscolarValue)}&`;
+    }
+    
+    if (filtros.dificuldade) {
+      url += `nivelDificuldade=${encodeURIComponent(filtros.dificuldade)}&`;
+    }
+    
+    if (filtros.tags) {
+      url += `tags=${encodeURIComponent(filtros.tags)}&`;
+    }
+    
+    // Remover o último '&' se existir
+    url = url.endsWith('&') ? url.slice(0, -1) : url;
+    
     // Buscar questões no backend
-    const response = await fetch(`${API_URL}/questoes/buscar?termo=${encodeURIComponent(inputSearch)}`, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -54,22 +79,129 @@ btnSearch.addEventListener('click', async () => {
     
     if (!response.ok) {
       alert(data.msg || 'Erro ao buscar questões. Tente novamente.');
-      return;
+      return [];
     }
     
-    // Se não encontrou questões
-    if (data.questoes.length === 0) {
-      alert('Nenhuma questão encontrada com esse termo.');
-      return;
-    }
-    
-    // Exibir questões encontradas (implementar função para mostrar as questões)
-    alert(`Encontradas ${data.questoes.length} questões com o termo: ${inputSearch}`);
-    // Aqui você pode implementar a lógica para exibir as questões encontradas
+    // Ajuste para o formato da resposta da API v1
+    return data.data || data || [];
   } catch (error) {
     console.error('Erro ao buscar questões:', error);
     alert('Erro ao conectar com o servidor. Tente novamente mais tarde.');
+    return [];
   }
+}
+
+// Função para exibir questões na interface
+function exibirQuestoes(questoes) {
+  const questionsSection = document.querySelector('.questions-section');
+  
+  // Limpar questões fixas de exemplo
+  questionsSection.innerHTML = '';
+  
+  if (questoes.length === 0) {
+    questionsSection.innerHTML = '<p class="no-questions">Nenhuma questão encontrada com os filtros selecionados.</p>';
+    return;
+  }
+  
+  // Exibir as questões encontradas
+  questoes.forEach(questao => {
+    const card = document.createElement('div');
+    card.classList.add('question-card');
+    
+    // Determinar a série/ano baseado no campo ano ou anoEscolar
+    let seriesInfo = questao.ano || questao.anoEscolar || '';
+    if (typeof seriesInfo === 'string' || typeof seriesInfo === 'number') {
+      if (seriesInfo.toString().includes('Médio')) {
+        seriesInfo = `(Ensino Médio, ${seriesInfo})`;
+      } else if (seriesInfo) {
+        // Formatar o ano escolar corretamente
+        const anoFormatado = seriesInfo.toString().replace(/^1$/, '1º Ano').replace(/^2$/, '2º Ano').replace(/^3$/, '3º Ano');
+        seriesInfo = `(Ensino Fundamental, ${anoFormatado})`;
+      } else {
+        seriesInfo = '(Série não especificada)';
+      }
+    } else {
+      seriesInfo = '(Série não especificada)';
+    }
+    
+    // Verificar o formato das alternativas (API v1 pode ter formato diferente)
+    let alternativasHTML = '';
+    if (questao.alternativas && Array.isArray(questao.alternativas)) {
+      // Verificar se as alternativas são objetos com propriedade 'texto' e 'correta'
+      if (questao.alternativas.length > 0 && typeof questao.alternativas[0] === 'object') {
+        alternativasHTML = questao.alternativas.map((alt, idx) => `
+          <li${alt.correta ? ' class="correct-alternative"' : ''}>
+            <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt.texto}
+          </li>`).join('');
+      } else {
+        // Alternativas são strings simples
+        alternativasHTML = questao.alternativas.map((alt, idx) => `
+          <li${idx === (questao.respostaCorreta || 0) ? ' class="correct-alternative"' : ''}>
+            <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt}
+          </li>`).join('');
+      }
+    }
+    
+    card.innerHTML = `
+      <div class="question-header">
+        <span class="question-info">Questão ${questao.disciplina || 'Geral'} | ${seriesInfo}</span>
+        <span class="question-difficulty">${questao.dificuldade || 'PADRÃO'}</span>
+      </div>
+      <p class="question-enunciado">${questao.enunciado}</p>
+      <ul class="question-alternativas">
+        ${alternativasHTML}
+      </ul>
+      <button class="btn-add-questao">ADICIONAR</button>
+    `;
+    questionsSection.appendChild(card);
+  });
+  
+  // Adicionar event listeners para os botões de adicionar
+  attachAddQuestionListeners();
+}
+
+// Botão BUSCAR
+const btnSearch = document.getElementById('btnSearch');
+btnSearch.addEventListener('click', async () => {
+  const inputSearch = document.getElementById('searchBNCC').value.trim();
+  if (inputSearch === "") {
+    alert("Digite uma palavra-chave ou código da BNCC para buscar questões.");
+    return;
+  }
+  
+  const questoes = await buscarQuestoes({ termo: inputSearch });
+  
+  // Se não encontrou questões
+  if (questoes.length === 0) {
+    alert('Nenhuma questão encontrada com esse termo.');
+    return;
+  }
+  
+  // Exibir questões encontradas
+  exibirQuestoes(questoes);
+});
+
+// Botão APLICAR FILTROS
+const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
+btnAplicarFiltros.addEventListener('click', async () => {
+  // Obter valores dos filtros
+  const disciplina = document.getElementById('disciplinaFiltro').value;
+  const anoEscolar = document.getElementById('anoEscolarFiltro').value;
+  const dificuldade = document.getElementById('dificuldadeFiltro').value;
+  const tags = document.getElementById('tagsFiltro').value.trim();
+  const termo = document.getElementById('searchBNCC').value.trim();
+  
+  // Buscar questões com os filtros
+  const questoes = await buscarQuestoes({
+    disciplina,
+    anoEscolar,
+    dificuldade,
+    tags,
+    termo
+  });
+  
+  // Exibir questões encontradas
+  exibirQuestoes(questoes);
 });
 
 // Limitar número de questões (máx 90) e salvar no localStorage
@@ -92,7 +224,7 @@ numeroQuestoes.addEventListener('change', () => {
 let questoesPessoais = JSON.parse(localStorage.getItem('questoesPessoais') || '[]');
 
 // Carregar dados da prova e questões pessoais salvas
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   // Nome da prova
   const storedNomeProva = localStorage.getItem('nomeProva');
   if (storedNomeProva) {
@@ -114,31 +246,75 @@ window.addEventListener('DOMContentLoaded', () => {
   `;
   document.getElementById('dadosSelecionados').innerHTML = dadosHTML;
   
+  // Limpar a seção de questões
+  const questionsSection = document.querySelector('.questions-section');
+  questionsSection.innerHTML = '';
+  
+  // Carregar questões iniciais da API
+  try {
+    // Usar filtros iniciais baseados nas disciplinas selecionadas
+    let filtrosIniciais = {};
+    if (disciplinasSelecionadas.length > 0) {
+      filtrosIniciais.disciplina = disciplinasSelecionadas[0]; // Usar a primeira disciplina como filtro inicial
+    }
+    
+    // Buscar questões iniciais
+    const questoesIniciais = await buscarQuestoes(filtrosIniciais);
+    
+    if (questoesIniciais.length > 0) {
+      exibirQuestoes(questoesIniciais);
+    } else {
+      // Se não encontrou questões com os filtros iniciais, exibir mensagem
+      questionsSection.innerHTML = '<p class="no-questions">Use os filtros acima para buscar questões ou clique em "Aplicar Filtros".</p>';
+    }
+  } catch (error) {
+    console.error('Erro ao carregar questões iniciais:', error);
+    questionsSection.innerHTML = '<p class="no-questions">Erro ao carregar questões. Por favor, tente novamente.</p>';
+  }
+  
   // Carrega questões pessoais
   const storedQuestoes = JSON.parse(localStorage.getItem('questoesPessoais') || '[]');
   if (storedQuestoes.length > 0) {
-    const questionsSection = document.querySelector('.questions-section');
     storedQuestoes.forEach(questao => {
       const card = document.createElement('div');
       card.classList.add('question-card');
+      
+      // Determinar a série/ano para exibição
+      let seriesInfo = questao.seriesIndicada || questao.series || '';
+      
+      // Preparar tags para exibição
+      const tagsHTML = questao.tags && questao.tags.length > 0 ? 
+        `<div class="question-tags"><span>Tags:</span> ${questao.tags.join(', ')}</div>` : '';
+      
       card.innerHTML = `
         <div class="question-header">
-          <span class="question-info">Questão Personalizada</span>
-          <span class="question-series"><b>Série/Ano:</b> ${questao.seriesIndicada}</span>
+          <span class="question-info">Questão ${questao.disciplina || 'Personalizada'}</span>
+          <span class="question-series"><b>Série/Ano:</b> ${seriesInfo}</span>
           <span class="question-difficulty">${questao.difficulty || 'PADRÃO'}</span>
         </div>
         <p class="question-enunciado">${questao.enunciado}</p>
+        ${questao.imagem ? `<div class="question-image"><img src="${questao.imagem}" alt="Imagem da questão" /></div>` : ''}
+        ${tagsHTML}
         <ul class="question-alternativas">
-          ${questao.alternativas.map((alt, idx) => `
-            <li${idx === parseInt(questao.correctAlternativeIndex, 10) ? ' class="correct-alternative"' : ''}>
-              <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt}
-            </li>`).join('')}
+          ${questao.alternativas.map((alt, idx) => {
+            // Verificar se alternativas é um array de objetos ou strings
+            const isObject = typeof alt === 'object';
+            const texto = isObject ? alt.texto : alt;
+            const isCorrect = isObject ? alt.correta : idx === parseInt(questao.correctAlternativeIndex || questao.correctAlternative, 10);
+            
+            return `<li${isCorrect ? ' class="correct-alternative"' : ''}>
+              <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${texto}
+            </li>`;
+          }).join('')}
         </ul>
         <button class="btn-add-questao">ADICIONAR</button>
       `;
       questionsSection.appendChild(card);
     });
   }
+  
+  // Inicializar os event listeners para os botões de adicionar
+  attachAddQuestionListeners();
 });
 
 // Função para extrair dados da questão a partir de um card
