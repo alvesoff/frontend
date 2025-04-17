@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Salvar no banco de dados
       try {
         // Usar a configuração centralizada da API
-        const API_URL = API_CONFIG.BASE_URL;
+        const API_URL = API_CONFIG.QUESTOES_API_URL;
         
         // Formatar dados para o backend
         const alternativasFormatadas = alternatives.map((texto, index) => ({
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           
           // Adicionar à lista de questões selecionadas no servidor
-          const API_URL = API_CONFIG.BASE_URL;
+          const API_URL = API_CONFIG.QUESTOES_API_URL;
           
           // Obter o ID da questão do atributo data-id (precisa ser adicionado ao elemento)
           const questionId = questionCard.getAttribute('data-id');
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar à lista de questões selecionadas no servidor
-        const API_URL = API_CONFIG.BASE_URL;
+        const API_URL = API_CONFIG.QUESTOES_API_URL;
         
         // Adicionar à lista de questões selecionadas temporariamente
         const selectedQuestions = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
