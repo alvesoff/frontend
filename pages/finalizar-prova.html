@@ -127,6 +127,11 @@
       <h2>Adicionar Questão Pessoal</h2>
       <form id="formAddQuestao">
         <div class="form-group">
+          <label for="questionTitle">Título da Questão</label>
+          <input type="text" id="questionTitle" placeholder="Digite um título breve para a questão" required />
+        </div>
+
+        <div class="form-group">
           <label for="questionText">Enunciado da Questão</label>
           <div id="questionText" contenteditable="true" class="rich-text-editor" 
                placeholder="Digite o enunciado da questão..." aria-required="true"></div>
@@ -215,6 +220,12 @@
             </div>
           </div>
         </fieldset>
+
+        <div class="form-group">
+          <label for="questionExplanation">Explicação da Resposta Correta</label>
+          <div id="questionExplanation" contenteditable="true" class="rich-text-editor"
+               placeholder="Explique por que a alternativa selecionada é a correta..." aria-required="true"></div>
+        </div>
 
         <button type="submit" id="btnSalvarQuestao" class="btn-add-personal-question">
           Adicionar Questão

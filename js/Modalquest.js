@@ -6,7 +6,7 @@
 if (typeof API_CONFIG === 'undefined') {
   console.warn('API_CONFIG não encontrado, usando configuração padrão');
   window.API_CONFIG = {
-    BASE_URL: 'https://api-educasmart.onrender.com',
+    QUESTOES_API_URL: 'https://api-quest-xf6a.onrender.com',
     getToken: function() {
       return localStorage.getItem('token');
     },
@@ -66,7 +66,17 @@ document.addEventListener('DOMContentLoaded', function() {
     formAddQuestao.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      // Obter valores dos campos adicionados
+      const questionTitleInput = document.getElementById('questionTitle');
+      const questionExplanationEditor = document.getElementById('questionExplanation');
+      const questionTitle = questionTitleInput ? questionTitleInput.value.trim() : '';
+      const explanation = questionExplanationEditor ? questionExplanationEditor.innerHTML.trim() : '';
+
       // Validar campos
+      if (!questionTitle) {
+        alert('Por favor, insira um título para a questão.');
+        return;
+      }
       if (!questionText.textContent.trim()) {
         alert('Por favor, preencha o enunciado da questão.');
         return;
@@ -81,6 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (!seriesIndicada.value) {
         alert('Por favor, selecione a série indicada.');
+        return;
+      }
+
+      if (!explanation) {
+        alert('Por favor, preencha a explicação da resposta correta.');
         return;
       }
       
@@ -154,17 +169,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const questaoPessoalData = {
           professor: professorId,
+          titulo: questionTitle, // Adicionado
           enunciado: questionText.innerHTML,
           alternativas: alternativasFormatadas,
-          dificuldade: difficulty.value,
-          serie: seriesIndicada.value,
+          nivelDificuldade: difficulty.value, // Renomeado de 'dificuldade'
+          anoEscolar: parseInt(seriesIndicada.value, 10), // Convertido para número
           disciplina: disciplinaQuestao.value,
           tags: tags,
+          explicacao: explanation, // Adicionado
           imagem: imagemBase64
         };
         
         // Enviar para o backend
-        const response = await fetch(`${API_URL}/api/questoes-pessoais`, {
+        const response = await fetch(`${API_URL}/api/v1/questoes`, {
           method: 'POST',
           headers: API_CONFIG.getAuthHeaders(),
           body: JSON.stringify(questaoPessoalData)
