@@ -43,28 +43,43 @@ async function buscarQuestoes(filtros = {}) {
       url += `q=${encodeURIComponent(filtros.termo)}&`;
     }
     
-    // Adicionar outros filtros
+    // Adicionar filtro de disciplina
     if (filtros.disciplina && filtros.disciplina !== '') {
       url += `disciplina=${encodeURIComponent(filtros.disciplina)}&`;
     }
     
+    // Adicionar filtro de ano escolar
     if (filtros.anoEscolar && filtros.anoEscolar !== '') {
-      // Tratar o valor do ano escolar para garantir que seja enviado corretamente
-      let anoEscolarValue = filtros.anoEscolar;
-      // Já convertemos os valores no HTML para números, então podemos enviar diretamente
-      url += `anoEscolar=${encodeURIComponent(anoEscolarValue)}&`;
+      // Converter para número para garantir formato correto
+      const anoEscolar = Number(filtros.anoEscolar);
+      if (!isNaN(anoEscolar)) {
+        url += `anoEscolar=${anoEscolar}&`;
+      }
     }
     
-    if (filtros.nivelDificuldade) {
+    // Adicionar filtro de nível de dificuldade
+    if (filtros.nivelDificuldade && filtros.nivelDificuldade !== '') {
       url += `nivelDificuldade=${encodeURIComponent(filtros.nivelDificuldade)}&`;
     }
     
-    if (filtros.tags) {
-      url += `tags=${encodeURIComponent(filtros.tags)}&`;
+    // Adicionar filtro de tags
+    if (filtros.tags && filtros.tags !== '') {
+      // Remover espaços extras e garantir formato correto
+      const tagsFormatadas = filtros.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag !== '')
+        .join(',');
+      
+      if (tagsFormatadas) {
+        url += `tags=${encodeURIComponent(tagsFormatadas)}&`;
+      }
     }
     
     // Remover o último '&' se existir
     url = url.endsWith('&') ? url.slice(0, -1) : url;
+    
+    console.log('URL de busca:', url); // Log para debug
     
     // Buscar questões no backend
     const response = await fetch(url, {
@@ -89,9 +104,11 @@ async function buscarQuestoes(filtros = {}) {
       return data.data;
     } else if (Array.isArray(data)) {
       // Caso a API retorne diretamente um array
+      console.log('Questões encontradas (array):', data.length);
       return data;
     } else if (data.data && Array.isArray(data.data)) {
       // Formato alternativo onde data contém o array
+      console.log('Questões encontradas (data.data):', data.data.length);
       return data.data;
     } else {
       console.warn('Formato de resposta inesperado:', data);
@@ -111,10 +128,12 @@ function exibirQuestoes(questoes) {
   // Limpar questões fixas de exemplo
   questionsSection.innerHTML = '';
   
-  if (questoes.length === 0) {
+  if (!questoes || questoes.length === 0) {
     questionsSection.innerHTML = '<p class="no-questions">Nenhuma questão encontrada com os filtros selecionados.</p>';
     return;
   }
+  
+  console.log(`Exibindo ${questoes.length} questões na interface`);
   
   // Exibir as questões encontradas
   questoes.forEach(questao => {
@@ -138,23 +157,31 @@ function exibirQuestoes(questoes) {
       if (questao.alternativas.length > 0 && typeof questao.alternativas[0] === 'object') {
         alternativasHTML = questao.alternativas.map((alt, idx) => `
           <li${alt.correta ? ' class="correct-alternative"' : ''}>
-            <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt.texto}
+            <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt.texto || ''}
           </li>`).join('');
       } else {
         // Alternativas são strings simples
         alternativasHTML = questao.alternativas.map((alt, idx) => `
           <li${idx === (questao.respostaCorreta || 0) ? ' class="correct-alternative"' : ''}>
-            <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt}
+            <span class="alternative-letter">${String.fromCharCode(97 + idx)})</span> ${alt || ''}
           </li>`).join('');
       }
+    } else {
+      // Caso não tenha alternativas
+      alternativasHTML = '<li>Sem alternativas disponíveis</li>';
     }
+    
+    // Verificar se há tags para exibir
+    const tagsHTML = questao.tags && questao.tags.length > 0 ? 
+      `<div class="question-tags"><span>Tags:</span> ${Array.isArray(questao.tags) ? questao.tags.join(', ') : questao.tags}</div>` : '';
     
     card.innerHTML = `
       <div class="question-header">
         <span class="question-info">Questão ${questao.disciplina || 'Geral'} | ${seriesInfo}</span>
         <span class="question-difficulty">${questao.nivelDificuldade || questao.dificuldade || 'PADRÃO'}</span>
       </div>
-      <p class="question-enunciado">${questao.enunciado}</p>
+      <p class="question-enunciado">${questao.enunciado || 'Sem enunciado'}</p>
+      ${tagsHTML}
       <ul class="question-alternativas">
         ${alternativasHTML}
       </ul>
@@ -198,17 +225,31 @@ btnAplicarFiltros.addEventListener('click', async () => {
   const tags = document.getElementById('tagsFiltro').value.trim();
   const termo = document.getElementById('searchBNCC').value.trim();
   
+  // Criar objeto de filtros
+  const filtros = {};
+  
+  // Adicionar apenas filtros com valores válidos
+  if (disciplina) filtros.disciplina = disciplina;
+  if (anoEscolar) filtros.anoEscolar = anoEscolar;
+  if (dificuldade) filtros.nivelDificuldade = dificuldade;
+  if (tags) filtros.tags = tags;
+  if (termo) filtros.termo = termo;
+  
+  console.log('Aplicando filtros:', filtros);
+  
   // Buscar questões com os filtros
-  const questoes = await buscarQuestoes({
-    disciplina,
-    anoEscolar,
-    nivelDificuldade: dificuldade, // Corrigido para usar nivelDificuldade conforme API
-    tags,
-    termo
-  });
+  const questoes = await buscarQuestoes(filtros);
   
   // Exibir questões encontradas
   exibirQuestoes(questoes);
+});
+
+// Adicionar evento de tecla Enter no campo de busca
+document.getElementById('searchBNCC').addEventListener('keypress', async (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('btnSearch').click();
+  }
 });
 
 // Limitar número de questões (máx 90) e salvar no localStorage
