@@ -55,8 +55,8 @@ async function buscarQuestoes(filtros = {}) {
       url += `anoEscolar=${encodeURIComponent(anoEscolarValue)}&`;
     }
     
-    if (filtros.dificuldade) {
-      url += `nivelDificuldade=${encodeURIComponent(filtros.dificuldade)}&`;
+    if (filtros.nivelDificuldade) {
+      url += `nivelDificuldade=${encodeURIComponent(filtros.nivelDificuldade)}&`;
     }
     
     if (filtros.tags) {
@@ -82,8 +82,21 @@ async function buscarQuestoes(filtros = {}) {
       return [];
     }
     
-    // Ajuste para o formato da resposta da API v1
-    return data.data || data || [];
+    // Processar a resposta da API conforme o formato esperado
+    // A API retorna um objeto com status, results e data
+    if (data.status === 'success' && Array.isArray(data.data)) {
+      console.log('Questões encontradas:', data.results);
+      return data.data;
+    } else if (Array.isArray(data)) {
+      // Caso a API retorne diretamente um array
+      return data;
+    } else if (data.data && Array.isArray(data.data)) {
+      // Formato alternativo onde data contém o array
+      return data.data;
+    } else {
+      console.warn('Formato de resposta inesperado:', data);
+      return [];
+    }
   } catch (error) {
     console.error('Erro ao buscar questões:', error);
     alert('Erro ao conectar com o servidor. Tente novamente mais tarde.');
@@ -108,20 +121,14 @@ function exibirQuestoes(questoes) {
     const card = document.createElement('div');
     card.classList.add('question-card');
     
-    // Determinar a série/ano baseado no campo ano ou anoEscolar
-    let seriesInfo = questao.ano || questao.anoEscolar || '';
+    // Determinar a série/ano baseado no campo anoEscolar
+    let seriesInfo = questao.anoEscolar || '';
     if (typeof seriesInfo === 'string' || typeof seriesInfo === 'number') {
-      if (seriesInfo.toString().includes('Médio')) {
-        seriesInfo = `(Ensino Médio, ${seriesInfo})`;
-      } else if (seriesInfo) {
-        // Formatar o ano escolar corretamente
-        const anoFormatado = seriesInfo.toString().replace(/^1$/, '1º Ano').replace(/^2$/, '2º Ano').replace(/^3$/, '3º Ano');
-        seriesInfo = `(Ensino Fundamental, ${anoFormatado})`;
-      } else {
-        seriesInfo = '(Série não especificada)';
-      }
+      // Formatar o ano escolar corretamente
+      const anoFormatado = seriesInfo.toString();
+      seriesInfo = `(${anoFormatado}º Ano)`;
     } else {
-      seriesInfo = '(Série não especificada)';
+      seriesInfo = '(Ano não especificado)';
     }
     
     // Verificar o formato das alternativas (API v1 pode ter formato diferente)
@@ -145,7 +152,7 @@ function exibirQuestoes(questoes) {
     card.innerHTML = `
       <div class="question-header">
         <span class="question-info">Questão ${questao.disciplina || 'Geral'} | ${seriesInfo}</span>
-        <span class="question-difficulty">${questao.dificuldade || 'PADRÃO'}</span>
+        <span class="question-difficulty">${questao.nivelDificuldade || questao.dificuldade || 'PADRÃO'}</span>
       </div>
       <p class="question-enunciado">${questao.enunciado}</p>
       <ul class="question-alternativas">
@@ -195,7 +202,7 @@ btnAplicarFiltros.addEventListener('click', async () => {
   const questoes = await buscarQuestoes({
     disciplina,
     anoEscolar,
-    dificuldade,
+    nivelDificuldade: dificuldade, // Corrigido para usar nivelDificuldade conforme API
     tags,
     termo
   });
