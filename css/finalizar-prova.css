@@ -12,6 +12,15 @@ html, body {
   min-height: 100vh;
 }
 
+/* Campo de contagem automática */
+.auto-count {
+  background-color: #f0f0f0;
+  color: #333;
+  font-weight: bold;
+  cursor: not-allowed;
+  border: 1px solid #ccc;
+}
+
 /* ===== TOPO ===== */
 .top-bar {
   display: flex;

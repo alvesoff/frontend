@@ -252,14 +252,25 @@ document.getElementById('searchBNCC').addEventListener('keypress', async (e) => 
   }
 });
 
-// Limitar número de questões (máx 90) e salvar no localStorage
+// Atualizar automaticamente o número de questões adicionadas
 const numeroQuestoes = document.getElementById('numeroQuestoes');
+
+// Função para atualizar o contador de questões
+function atualizarContadorQuestoes() {
+  const questoesAdicionadas = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+  numeroQuestoes.value = questoesAdicionadas.length;
+  // Salvar no localStorage para persistência
+  localStorage.setItem('numeroQuestoes', numeroQuestoes.value);
+}
+
+// Atualizar contador ao carregar a página
 window.addEventListener('DOMContentLoaded', () => {
-  const storedNumQuestoes = localStorage.getItem('numeroQuestoes');
-  if (storedNumQuestoes) {
-    numeroQuestoes.value = storedNumQuestoes;
-  }
+  // Tornar o campo somente leitura, já que agora é automático
+  numeroQuestoes.setAttribute('readonly', true);
+  atualizarContadorQuestoes();
 });
+
+// Limitar número de questões (máx 90)
 numeroQuestoes.addEventListener('change', () => {
   if (parseInt(numeroQuestoes.value, 10) > 90) {
     numeroQuestoes.value = 90;
@@ -267,6 +278,7 @@ numeroQuestoes.addEventListener('change', () => {
   }
   localStorage.setItem('numeroQuestoes', numeroQuestoes.value);
 });
+
 
 // Inicialização das variáveis globais
 let questoesPessoais = JSON.parse(localStorage.getItem('questoesPessoais') || '[]');
@@ -443,6 +455,9 @@ function addQuestionHandler() {
     this.disabled = true;
     this.style.backgroundColor = '#4CAF50';
     
+    // Atualiza o contador de questões
+    atualizarContadorQuestoes();
+    
     console.log('Questão adicionada com sucesso!', questionData);
   } else {
     alert("Essa questão já foi adicionada.");
@@ -506,6 +521,9 @@ selectedQuestionsList.addEventListener('click', (e) => {
     selectedQuestions.splice(index, 1);
     localStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
     e.target.closest('.selected-question').remove();
+    
+    // Atualiza o contador de questões após remover uma questão
+    atualizarContadorQuestoes();
   }
 });
 document.addEventListener('DOMContentLoaded', () => {
