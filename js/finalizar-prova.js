@@ -194,26 +194,7 @@ function exibirQuestoes(questoes) {
   attachAddQuestionListeners();
 }
 
-// Botão BUSCAR
-const btnSearch = document.getElementById('btnSearch');
-btnSearch.addEventListener('click', async () => {
-  const inputSearch = document.getElementById('searchBNCC').value.trim();
-  if (inputSearch === "") {
-    alert("Digite uma palavra-chave ou código da BNCC para buscar questões.");
-    return;
-  }
-  
-  const questoes = await buscarQuestoes({ termo: inputSearch });
-  
-  // Se não encontrou questões
-  if (questoes.length === 0) {
-    alert('Nenhuma questão encontrada com esse termo.');
-    return;
-  }
-  
-  // Exibir questões encontradas
-  exibirQuestoes(questoes);
-});
+// Botão BUSCAR removido
 
 // Botão APLICAR FILTROS
 const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
@@ -223,7 +204,6 @@ btnAplicarFiltros.addEventListener('click', async () => {
   const anoEscolar = document.getElementById('anoEscolarFiltro').value;
   const dificuldade = document.getElementById('dificuldadeFiltro').value;
   const tags = document.getElementById('tagsFiltro').value.trim();
-  const termo = document.getElementById('searchBNCC').value.trim();
   
   // Criar objeto de filtros
   const filtros = {};
@@ -233,7 +213,6 @@ btnAplicarFiltros.addEventListener('click', async () => {
   if (anoEscolar) filtros.anoEscolar = anoEscolar;
   if (dificuldade) filtros.nivelDificuldade = dificuldade;
   if (tags) filtros.tags = tags;
-  if (termo) filtros.termo = termo;
   
   console.log('Aplicando filtros:', filtros);
   
@@ -244,13 +223,7 @@ btnAplicarFiltros.addEventListener('click', async () => {
   exibirQuestoes(questoes);
 });
 
-// Adicionar evento de tecla Enter no campo de busca
-document.getElementById('searchBNCC').addEventListener('keypress', async (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    document.getElementById('btnSearch').click();
-  }
-});
+// Evento de tecla Enter no campo de busca removido
 
 // Atualizar automaticamente o número de questões adicionadas
 const numeroQuestoes = document.getElementById('numeroQuestoes');
@@ -261,6 +234,27 @@ function atualizarContadorQuestoes() {
   numeroQuestoes.value = questoesAdicionadas.length;
   // Salvar no localStorage para persistência
   localStorage.setItem('numeroQuestoes', numeroQuestoes.value);
+}
+
+// Função para atualizar os botões após remover uma questão
+function atualizarBotoesAposRemocao() {
+  const addButtons = document.querySelectorAll('.btn-add-questao');
+  const storedQuestions = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+  
+  addButtons.forEach(button => {
+    const card = button.closest('.question-card');
+    const enunciado = card.querySelector('.question-enunciado').innerHTML;
+    
+    // Verifica se a questão ainda está na lista de selecionadas
+    const questaoAdicionada = storedQuestions.some(q => q.enunciado === enunciado);
+    
+    // Se não estiver mais na lista, restaura o botão para o estado original
+    if (!questaoAdicionada) {
+      button.textContent = 'ADICIONAR';
+      button.disabled = false;
+      button.style.backgroundColor = '';
+    }
+  });
 }
 
 // Atualizar contador ao carregar a página
@@ -506,10 +500,14 @@ btnVisualizar.addEventListener('click', () => {
 // Fechar modal ao clicar no botão de fechar ou fora da área
 closeModalVisualizarProva.addEventListener('click', () => {
   modalVisualizarProva.style.display = 'none';
+  // Atualiza os botões ao fechar o modal para garantir que reflitam o estado atual
+  atualizarBotoesAposRemocao();
 });
 modalVisualizarProva.addEventListener('click', (e) => {
   if (e.target === modalVisualizarProva) {
     modalVisualizarProva.style.display = 'none';
+    // Atualiza os botões ao fechar o modal para garantir que reflitam o estado atual
+    atualizarBotoesAposRemocao();
   }
 });
 
@@ -518,12 +516,16 @@ modalVisualizarProva.addEventListener('click', (e) => {
 selectedQuestionsList.addEventListener('click', (e) => {
   if (e.target.classList.contains('delete-question')) {
     const index = parseInt(e.target.getAttribute('data-index'), 10);
+    const removedQuestion = selectedQuestions[index];
     selectedQuestions.splice(index, 1);
     localStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
     e.target.closest('.selected-question').remove();
     
     // Atualiza o contador de questões após remover uma questão
     atualizarContadorQuestoes();
+    
+    // Atualiza os botões na lista de questões para refletir a remoção
+    atualizarBotoesAposRemocao();
   }
 });
 document.addEventListener('DOMContentLoaded', () => {
