@@ -502,9 +502,7 @@ closeModalVisualizarProva.addEventListener('click', () => {
   modalVisualizarProva.style.display = 'none';
   // Atualiza os botões ao fechar o modal para garantir que reflitam o estado atual
   atualizarBotoesAposRemocao();
-  // Limpar questões selecionadas ao fechar o modal
-  localStorage.removeItem('selectedQuestions');
-  selectedQuestions = [];
+  // Não limpa mais as questões ao fechar o modal
   atualizarContadorQuestoes();
 });
 
@@ -513,9 +511,7 @@ modalVisualizarProva.addEventListener('click', (e) => {
     modalVisualizarProva.style.display = 'none';
     // Atualiza os botões ao fechar o modal para garantir que reflitam o estado atual
     atualizarBotoesAposRemocao();
-    // Limpar questões selecionadas ao fechar o modal
-    localStorage.removeItem('selectedQuestions');
-    selectedQuestions = [];
+    // Não limpa mais as questões ao fechar o modal
     atualizarContadorQuestoes();
   }
 });
