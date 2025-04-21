@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           if (!questionId) {
             // Se não tiver ID, adicionar diretamente à lista de questões selecionadas
-            const selectedQuestions = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+            const selectedQuestions = JSON.parse(sessionStorage.getItem('selectedQuestions') || localStorage.getItem('selectedQuestions')) || [];
             selectedQuestions.push({
               enunciado: question.enunciado,
               alternativas: question.alternativas.map((alt, index) => `${letters[index]} ${alt}`),
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
               series: question.series,
               imagem: question.imagem // Incluir a imagem se existir
             });
-            localStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
+            sessionStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
           }
           
           // Update button state
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const API_URL = API_CONFIG.QUESTOES_API_URL;
         
         // Adicionar à lista de questões selecionadas temporariamente
-        const selectedQuestions = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+        const selectedQuestions = JSON.parse(sessionStorage.getItem('selectedQuestions') || localStorage.getItem('selectedQuestions')) || [];
         selectedQuestions.push({
           enunciado: enunciado,
           alternativas: alternativas,
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function() {
           difficulty: difficulty,
           imagem: imagem // Incluir a imagem se existir
         });
-        localStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
+        sessionStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
         
         // Feedback visual
         this.textContent = 'ADICIONADA';

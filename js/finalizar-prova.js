@@ -8,8 +8,8 @@ if (typeof API_CONFIG === 'undefined') {
   window.location.href = '/pages/login-professor.html';
 }
 
-// Global para as questões selecionadas (persistência via localStorage)
-let selectedQuestions = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+// Global para as questões selecionadas (persistência via sessionStorage para modal, localStorage para outras)
+let selectedQuestions = JSON.parse(sessionStorage.getItem('selectedQuestions') || localStorage.getItem('selectedQuestions')) || [];
 
 // Botão VOLTAR
 const btnVoltar = document.getElementById('btnVoltar');
