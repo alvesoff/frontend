@@ -559,16 +559,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const API_URL = API_CONFIG.BASE_URL;
       const token = localStorage.getItem('token');
-      const professorId = localStorage.getItem('professorId') || localStorage.getItem('userId');
+      const professorId = localStorage.getItem('professorId');
 
-      if (!token) {
+      if (!token || !professorId) {
         alert('Você precisa estar logado para salvar a prova.');
-        return;
-      }
-      
-      if (!professorId) {
-        console.error('ID do professor não encontrado');
-        alert('Erro: ID do professor não encontrado. Por favor, faça login novamente.');
         return;
       }
       
@@ -627,44 +621,21 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Dados da prova formatados:', JSON.stringify(provaFormatada));
 
       // Enviar prova para o backend
-      console.log('Enviando prova para o servidor...');
-      try {
-        const response = await fetch(`${API_URL}/api/provas`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': token
-          },
-          body: JSON.stringify(provaFormatada),
-          mode: 'cors'
-          // Removido credentials: 'include' para evitar erro de CORS
-        });
+      const response = await fetch(`${API_URL}/api/provas`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        },
+        body: JSON.stringify(provaFormatada),
+        mode: 'cors'
+        // Removido credentials: 'include' para evitar erro de CORS
+      });
 
-        console.log('Status da resposta:', response.status);
-        
-        // Verificar se a resposta é JSON antes de tentar fazer o parse
-        const contentType = response.headers.get('content-type');
-        let data;
-        
-        if (contentType && contentType.includes('application/json')) {
-          data = await response.json();
-          console.log('Resposta do servidor:', data);
-        } else {
-          const textResponse = await response.text();
-          console.log('Resposta não-JSON do servidor:', textResponse);
-          data = { msg: 'Erro no servidor: resposta não é JSON' };
-        }
+      const data = await response.json();
 
       if (!response.ok) {
-        console.error('Erro ao salvar a prova:', data);
-        alert('Erro ao salvar a prova: ' + (data.msg || `Erro ${response.status}: ${response.statusText}`));
-        return;
-      }
-      
-      // Verificar se a resposta contém os dados esperados
-      if (!data.data || !data.data.codigoProva) {
-        console.error('Resposta não contém código da prova:', data);
-        alert('Erro: A resposta do servidor não contém o código da prova');
+        alert('Erro ao salvar a prova: ' + (data.msg || 'Erro desconhecido'));
         return;
       }
 
