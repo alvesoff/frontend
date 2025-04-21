@@ -339,6 +339,12 @@ document.addEventListener('DOMContentLoaded', function() {
     modalResultado.style.display = 'none';
     // Não limpa os dados nem redireciona ao fechar o modal
     // Os dados serão limpos apenas quando o usuário sair da página
+    
+    // Verificar se as questões ainda estão visíveis, se não estiverem, recarregá-las
+    if (questoesContainer.children.length === 0 || questoesContainer.innerHTML === '') {
+      console.log('Recarregando questões após fechar o modal de resultado');
+      carregarQuestoes();
+    }
   }
   
   // Adicionar evento para limpar selectedQuestions ao carregar a página
