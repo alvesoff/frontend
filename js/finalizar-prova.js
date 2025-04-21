@@ -502,12 +502,21 @@ closeModalVisualizarProva.addEventListener('click', () => {
   modalVisualizarProva.style.display = 'none';
   // Atualiza os botões ao fechar o modal para garantir que reflitam o estado atual
   atualizarBotoesAposRemocao();
+  // Limpar questões selecionadas ao fechar o modal
+  localStorage.removeItem('selectedQuestions');
+  selectedQuestions = [];
+  atualizarContadorQuestoes();
 });
+
 modalVisualizarProva.addEventListener('click', (e) => {
   if (e.target === modalVisualizarProva) {
     modalVisualizarProva.style.display = 'none';
     // Atualiza os botões ao fechar o modal para garantir que reflitam o estado atual
     atualizarBotoesAposRemocao();
+    // Limpar questões selecionadas ao fechar o modal
+    localStorage.removeItem('selectedQuestions');
+    selectedQuestions = [];
+    atualizarContadorQuestoes();
   }
 });
 
@@ -678,5 +687,11 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Ocorreu um erro ao salvar a prova. Por favor, tente novamente.');
     }
   });
+});
+
+
+// Adicionar evento para limpar selectedQuestions ao sair da página
+window.addEventListener('beforeunload', () => {
+  localStorage.removeItem('selectedQuestions');
 });
 

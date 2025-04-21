@@ -337,11 +337,18 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function fecharModalResultado() {
     modalResultado.style.display = 'none';
-    window.location.href = '/index.html';
+    // Não limpa os dados nem redireciona ao fechar o modal
+    // Os dados serão limpos apenas quando o usuário sair da página
   }
   
   // Adicionar evento para limpar selectedQuestions ao carregar a página
   window.addEventListener('load', () => {
     localStorage.removeItem('selectedQuestions');
+  });
+  
+  // Adicionar evento para limpar selectedQuestions ao sair da página
+  window.addEventListener('beforeunload', () => {
+    localStorage.removeItem('selectedQuestions');
+    localStorage.removeItem('currentProva');
   });
 });

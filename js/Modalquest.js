@@ -66,17 +66,11 @@ document.addEventListener('DOMContentLoaded', function() {
     formAddQuestao.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Obter valores dos campos adicionados
-      const questionTitleInput = document.getElementById('questionTitle');
+      // Obter valores dos campos essenciais
       const questionExplanationEditor = document.getElementById('questionExplanation');
-      const questionTitle = questionTitleInput ? questionTitleInput.value.trim() : '';
       const explanation = questionExplanationEditor ? questionExplanationEditor.innerHTML.trim() : '';
 
-      // Validar campos
-      if (!questionTitle) {
-        alert('Por favor, insira um título para a questão.');
-        return;
-      }
+      // Validar campos essenciais
       if (!questionText.textContent.trim()) {
         alert('Por favor, preencha o enunciado da questão.');
         return;
@@ -120,24 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const tagsQuestao = document.getElementById('tagsQuestao');
       const tags = tagsQuestao.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '')
       
-      // Processar imagem se existir
-      let imagemBase64 = null;
-      const fileInput = document.getElementById('fileAttachment');
-      if (fileInput && fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        // Verificar se é uma imagem
-        if (file.type.startsWith('image/')) {
-          try {
-            // Converter para base64
-            imagemBase64 = await convertFileToBase64(file);
-          } catch (error) {
-            console.error('Erro ao processar imagem:', error);
-            alert('Erro ao processar a imagem. Por favor, tente novamente.');
-            return;
-          }
-        }
-      }
-      
       // Criar nova questão
       const newQuestion = {
         enunciado: questionText.innerHTML,
@@ -155,30 +131,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Usar a configuração centralizada da API
         const API_URL = API_CONFIG.QUESTOES_API_URL;
         
-        // Formatar dados para o backend
-        const alternativasFormatadas = alternatives.map((texto, index) => ({
-          texto,
-          correta: index === parseInt(correctAlternative.value, 10)
-        }));
-        
-        const professorId = localStorage.getItem('professorId');
-        if (!professorId) {
-          alert('ID do professor não encontrado. Por favor, faça login novamente.');
-          return;
-        }
-
+        // Formatar dados para o backend conforme a estrutura da API
         const questaoPessoalData = {
-          professor: professorId,
-          titulo: questionTitle, // Adicionado
           enunciado: questionText.innerHTML,
-          alternativas: alternativasFormatadas,
-          nivelDificuldade: difficulty.value, // Renomeado de 'dificuldade'
-          anoEscolar: parseInt(seriesIndicada.value, 10), // Convertido para número
+          alternativas: alternatives,
+          alternativaCorreta: alternatives[parseInt(correctAlternative.value, 10)],
+          explicacao: explanation,
           disciplina: disciplinaQuestao.value,
-          tags: tags,
-          explicacao: explanation, // Adicionado
-          imagem: imagemBase64
+          anoEscolar: parseInt(seriesIndicada.value, 10),
+          nivelDificuldade: difficulty.value,
+          tags: tags
         };
+        
+        // Remover campos vazios
+        Object.keys(questaoPessoalData).forEach(key => {
+          if (questaoPessoalData[key] === '' || questaoPessoalData[key] === null) {
+            delete questaoPessoalData[key];
+          }
+        });
+        
+        console.log('Enviando questão:', questaoPessoalData);
         
         // Enviar para o backend
         const response = await fetch(`${API_URL}/api/v1/questoes`, {
