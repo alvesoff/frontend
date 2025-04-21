@@ -559,10 +559,16 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const API_URL = API_CONFIG.BASE_URL;
       const token = localStorage.getItem('token');
-      const professorId = localStorage.getItem('professorId');
+      const professorId = localStorage.getItem('professorId') || localStorage.getItem('userId');
 
-      if (!token || !professorId) {
+      if (!token) {
         alert('Você precisa estar logado para salvar a prova.');
+        return;
+      }
+      
+      if (!professorId) {
+        console.error('ID do professor não encontrado');
+        alert('Erro: ID do professor não encontrado. Por favor, faça login novamente.');
         return;
       }
       
@@ -584,38 +590,81 @@ document.addEventListener('DOMContentLoaded', () => {
         serie: provaData.selectedFund.length > 0 ? 'Fundamental' : 'Médio',
         turmas: [...(provaData.selectedFund || []), ...(provaData.selectedMedio || [])],
         professor: professorId,
-        questoes: provaData.questoes.map(q => ({
-          enunciado: q.enunciado,
-          alternativas: q.alternativas.map((alt, index) => ({
-            texto: alt,
-            correta: index === parseInt(q.correctAlternative, 10)
-          })),
-          pontuacao: 1,
-          dificuldade: q.difficulty || 'PADRÃO',
-          serie: q.series || '',
-          imagem: q.imagem || null // Incluir a imagem se existir
-        })),
+        questoes: provaData.questoes.map(q => {
+          // Verificar e limpar o enunciado de possíveis tags HTML que possam causar problemas
+          const enunciadoLimpo = q.enunciado.replace(/<\/?[^>]+(>|$)/g, "").trim();
+          
+          // Verificar e formatar alternativas corretamente
+          const alternativas = [];
+          if (Array.isArray(q.alternativas)) {
+            q.alternativas.forEach((alt, index) => {
+              // Verificar se a alternativa é uma string ou um objeto
+              const textoAlternativa = typeof alt === 'object' ? alt.texto : alt;
+              // Limpar possíveis tags HTML
+              const textoLimpo = textoAlternativa.replace(/<\/?[^>]+(>|$)/g, "").trim();
+              
+              alternativas.push({
+                texto: textoLimpo,
+                correta: index === parseInt(q.correctAlternative, 10)
+              });
+            });
+          }
+          
+          return {
+            enunciado: enunciadoLimpo,
+            alternativas: alternativas,
+            pontuacao: 1,
+            dificuldade: q.difficulty || 'PADRÃO',
+            serie: q.series || '',
+            imagem: q.imagem || null // Incluir a imagem se existir
+          };
+        }),
         dataInicio: new Date().toISOString(),
         dataFim: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         duracao: 60
       };
+      
+      console.log('Dados da prova formatados:', JSON.stringify(provaFormatada));
 
       // Enviar prova para o backend
-      const response = await fetch(`${API_URL}/api/provas`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token
-        },
-        body: JSON.stringify(provaFormatada),
-        mode: 'cors'
-        // Removido credentials: 'include' para evitar erro de CORS
-      });
+      console.log('Enviando prova para o servidor...');
+      try {
+        const response = await fetch(`${API_URL}/api/provas`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+          },
+          body: JSON.stringify(provaFormatada),
+          mode: 'cors'
+          // Removido credentials: 'include' para evitar erro de CORS
+        });
 
-      const data = await response.json();
+        console.log('Status da resposta:', response.status);
+        
+        // Verificar se a resposta é JSON antes de tentar fazer o parse
+        const contentType = response.headers.get('content-type');
+        let data;
+        
+        if (contentType && contentType.includes('application/json')) {
+          data = await response.json();
+          console.log('Resposta do servidor:', data);
+        } else {
+          const textResponse = await response.text();
+          console.log('Resposta não-JSON do servidor:', textResponse);
+          data = { msg: 'Erro no servidor: resposta não é JSON' };
+        }
 
       if (!response.ok) {
-        alert('Erro ao salvar a prova: ' + (data.msg || 'Erro desconhecido'));
+        console.error('Erro ao salvar a prova:', data);
+        alert('Erro ao salvar a prova: ' + (data.msg || `Erro ${response.status}: ${response.statusText}`));
+        return;
+      }
+      
+      // Verificar se a resposta contém os dados esperados
+      if (!data.data || !data.data.codigoProva) {
+        console.error('Resposta não contém código da prova:', data);
+        alert('Erro: A resposta do servidor não contém o código da prova');
         return;
       }
 
