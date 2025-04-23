@@ -175,12 +175,22 @@ function exibirQuestoes(questoes) {
     const tagsHTML = questao.tags && questao.tags.length > 0 ? 
       `<div class="question-tags"><span>Tags:</span> ${Array.isArray(questao.tags) ? questao.tags.join(', ') : questao.tags}</div>` : '';
     
+    // Verificar se há imagem para exibir (suporta tanto campo 'imagem' quanto 'imagens')
+    let imagemHTML = '';
+    if (questao.imagem && typeof questao.imagem === 'string') {
+      imagemHTML = `<div class="question-image"><img src="${questao.imagem}" alt="Imagem da questão" /></div>`;
+    } else if (questao.imagens && Array.isArray(questao.imagens) && questao.imagens.length > 0) {
+      // Se tiver múltiplas imagens, exibe a primeira
+      imagemHTML = `<div class="question-image"><img src="${questao.imagens[0]}" alt="Imagem da questão" /></div>`;
+    }
+    
     card.innerHTML = `
       <div class="question-header">
         <span class="question-info">Questão ${questao.disciplina || 'Geral'} | ${seriesInfo}</span>
         <span class="question-difficulty">${questao.nivelDificuldade || questao.dificuldade || 'PADRÃO'}</span>
       </div>
       <p class="question-enunciado">${questao.enunciado || 'Sem enunciado'}</p>
+      ${imagemHTML}
       ${tagsHTML}
       <ul class="question-alternativas">
         ${alternativasHTML}
@@ -391,6 +401,13 @@ function getQuestionData(card) {
       seriesInfo = infoText.trim();
     }
   }
+  
+  // Verificar se há imagem na questão
+  let imagem = null;
+  const imagemElement = card.querySelector('.question-image img');
+  if (imagemElement && imagemElement.src) {
+    imagem = imagemElement.src;
+  }
     
   return {
     enunciado: card.querySelector('.question-enunciado').innerHTML,
@@ -398,7 +415,8 @@ function getQuestionData(card) {
                     .map(li => li.innerText.trim()),
     difficulty: card.querySelector('.question-difficulty').innerText.trim(),
     correctAlternative: correctAlternativeIndex >= 0 ? correctAlternativeIndex : 0,
-    series: seriesInfo
+    series: seriesInfo,
+    imagem: imagem
   };
 }
 
@@ -476,8 +494,13 @@ btnVisualizar.addEventListener('click', () => {
       const questionDiv = document.createElement('div');
       questionDiv.classList.add('selected-question');
       
-      // Preparar HTML da imagem se existir
-      const imagemHTML = q.imagem ? `<div class="question-image"><img src="${q.imagem}" alt="Imagem da questão" /></div>` : '';
+      // Preparar HTML da imagem se existir (verifica tanto campo imagem quanto imagens)
+      let imagemHTML = '';
+      if (q.imagem && typeof q.imagem === 'string') {
+        imagemHTML = `<div class="question-image"><img src="${q.imagem}" alt="Imagem da questão" /></div>`;
+      } else if (q.imagens && Array.isArray(q.imagens) && q.imagens.length > 0) {
+        imagemHTML = `<div class="question-image"><img src="${q.imagens[0]}" alt="Imagem da questão" /></div>`;
+      }
       
       questionDiv.innerHTML = `
         <p><strong>Enunciado:</strong> ${q.enunciado}</p>
