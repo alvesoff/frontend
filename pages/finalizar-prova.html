@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/finalizar-prova.css">
   <link rel="stylesheet" href="/css/modal2.css">
   <link rel="stylesheet" href="/css/question-image.css">
+  <link rel="stylesheet" href="/css/image-upload.css">
   <!-- Novo CSS específico para o modal de Visualizar Prova -->
   <link rel="stylesheet" href="/css/modal-visualizar-prova.css">
   <!-- Novo CSS específico para o modal de Adicionar Questão Pessoal -->
@@ -123,6 +124,11 @@
       <h2>Adicionar Questão Pessoal</h2>
       <form id="formAddQuestao">
         <div class="form-group">
+          <label for="tituloQuestao">Título da Questão</label>
+          <input type="text" id="tituloQuestao" name="tituloQuestao" placeholder="Digite um título para a questão" required>
+        </div>
+
+        <div class="form-group">
           <label for="questionText">Enunciado da Questão</label>
           <div id="questionText" contenteditable="true" class="rich-text-editor" 
                placeholder="Digite o enunciado da questão..." aria-required="true"></div>
@@ -167,9 +173,9 @@
         <div class="form-group">
           <label for="difficulty">Nível de dificuldade</label>
           <select id="difficulty" required>
-            <option value="facil">Fácil</option>
-            <option value="medio" selected>Médio</option>
-            <option value="dificil">Difícil</option>
+            <option value="Fácil">Fácil</option>
+            <option value="Médio" selected>Médio</option>
+            <option value="Difícil">Difícil</option>
           </select>
         </div>
         
@@ -210,6 +216,14 @@
                placeholder="Explique por que a alternativa selecionada é a correta..." aria-required="true"></div>
         </div>
 
+        <div class="form-group">
+          <label for="imagensQuestao">Imagens (opcional)</label>
+          <div class="image-upload-container">
+            <input type="file" id="imagensQuestao" name="imagensQuestao" accept="image/*" multiple>
+            <div id="previewImagens" class="image-preview"></div>
+          </div>
+        </div>
+
         <button type="submit" id="btnSalvarQuestao" class="btn-add-personal-question">
           Adicionar Questão
         </button>
@@ -241,6 +255,7 @@ window.gerarCodigoProva = gerarCodigoProva;
 </script>
   <script src="/js/finalizar-prova.js"></script>
   <script src="/js/Modalquest.js"></script>
+  <script src="/js/preview-imagens.js"></script>
 </body>
 </html>
 

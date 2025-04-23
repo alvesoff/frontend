@@ -123,15 +123,38 @@
 .modal-content-add-question .file-input-label {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   cursor: pointer;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 1.2rem;
+  border: 2px dashed #4F8CFF;
+  border-radius: 8px;
+  background-color: #f8faff;
+  transition: all 0.2s ease;
+}
+
+.modal-content-add-question .file-input-label:hover {
+  background-color: #edf2ff;
+  border-color: #0020F2;
+  transform: translateY(-2px);
 }
 
 .modal-content-add-question .file-input-label small {
   font-weight: normal;
   color: #666;
-  margin-top: 0.2rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.modal-content-add-question .file-input-label::before {
+  content: "📎 Clique para adicionar uma imagem";
+  font-weight: 600;
+  color: #0020F2;
+  margin-bottom: 0.3rem;
+}
+
+.modal-content-add-question .file-input-label:hover::before {
+  color: #001ad9;
 }
 
 .modal-content-add-question input[type="file"] {

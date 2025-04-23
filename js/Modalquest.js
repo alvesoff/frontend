@@ -122,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
         series: seriesIndicada.value,
         disciplina: disciplinaQuestao.value,
         difficulty: difficulty.value,
-        imagem: imagemBase64, // Adicionar imagem se existir
         tags: tags
       };
       
@@ -132,15 +131,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const API_URL = API_CONFIG.QUESTOES_API_URL;
         
         // Formatar dados para o backend conforme a estrutura da API
+        const tituloQuestao = document.getElementById('tituloQuestao').value.trim();
+        if (!tituloQuestao) {
+          alert('Por favor, preencha o título da questão.');
+          return;
+        }
+
+        // Formatar alternativas no formato correto para a API
+        const alternativasFormatadas = alternatives.map((texto, index) => ({
+          texto: texto,
+          correta: parseInt(correctAlternative.value, 10) === index
+        }));
+
+        // Processar imagens se existirem
+        const imagensInput = document.getElementById('imagensQuestao');
+        let imagens = [];
+        
+        // Verificar se há imagens selecionadas
+        if (imagensInput.files.length > 0) {
+          // Converter imagens para base64 (será feito de forma assíncrona abaixo)
+          for (let i = 0; i < imagensInput.files.length; i++) {
+            const file = imagensInput.files[i];
+            try {
+              const base64 = await convertFileToBase64(file);
+              imagens.push(base64);
+            } catch (error) {
+              console.error('Erro ao converter imagem para base64:', error);
+              alert('Erro ao processar imagem: ' + error.message);
+              return;
+            }
+          }
+        }
+
         const questaoPessoalData = {
+          titulo: tituloQuestao,
           enunciado: questionText.innerHTML,
-          alternativas: alternatives,
-          alternativaCorreta: alternatives[parseInt(correctAlternative.value, 10)],
+          alternativas: alternativasFormatadas,
           explicacao: explanation,
           disciplina: disciplinaQuestao.value,
           anoEscolar: parseInt(seriesIndicada.value, 10),
           nivelDificuldade: difficulty.value,
-          tags: tags
+          tags: tags,
+          imagens: imagens.length > 0 ? imagens : undefined
         };
         
         // Remover campos vazios
