@@ -1,5 +1,5 @@
 .container {
-  max-width: 800px;
+  max-width: 700px;
   margin: 2rem auto;
   padding: 2rem 2.5rem;
   background: #fff;
@@ -8,7 +8,6 @@
   font-family: 'DM Sans', 'Nunito Sans', Arial, sans-serif;
 }
 
-/* Barra superior com timer */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -19,13 +18,10 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   border-radius: 14px;
   padding: 1.2rem 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 
-.top-bar .page-title {
-  font-size: 1.8rem;
+.top-bar .title {
+  font-size: 2.1rem;
   font-weight: 700;
   color: #3a86ff;
   letter-spacing: 0.02em;
@@ -38,209 +34,273 @@
   align-items: center;
 }
 
-/* Timer com ícone e cores dinâmicas */
-.timer {
-  display: flex;
-  align-items: center;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #4caf50; /* Verde inicial */
-  background: rgba(76, 175, 80, 0.1);
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.timer::before {
-  content: '⏱️';
-  margin-right: 8px;
-  font-size: 1.3rem;
-}
-
-.timer.warning {
-  color: #ff9800; /* Amarelo para aviso */
-  background: rgba(255, 152, 0, 0.1);
-}
-
-.timer.danger {
-  color: #f44336; /* Vermelho para perigo */
-  background: rgba(244, 67, 54, 0.1);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-/* Informações da prova e aluno */
-.prova-info {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  border-left: 4px solid #3a86ff;
-}
-
-.prova-info h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
+.btn-voltar, .btn-editar {
+  background: #f5f6fa;
   color: #2d3a4b;
-  margin-bottom: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 
-.prova-info #alunoInfo {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #546e7a;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.btn-voltar:hover, .btn-editar:hover {
+  background: #e0e4ea;
+  color: #1976d2;
 }
 
-.prova-info #alunoInfo::before {
-  content: '👤';
-  font-size: 1.3rem;
-}
-
-/* Container de questões */
-.questoes-container {
+.questions-section {
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem; /* Espaçamento generoso entre questões */
+  gap: 2.2rem;
 }
 
-/* Estilo para cada questão */
-.questao {
+.question-card {
   background: #f8fafc;
   border-radius: 12px;
-  box-shadow: 0 3px 15px rgba(44,62,80,0.08);
-  padding: 1.8rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+  padding: 1.7rem 1.5rem 1.2rem 1.5rem;
+  margin-bottom: 0.5rem;
+  transition: box-shadow 0.2s, transform 0.2s;
   border: 1px solid #e3e8ee;
-  position: relative;
 }
 
-.questao:hover {
-  box-shadow: 0 6px 20px rgba(44,62,80,0.12);
-  transform: translateY(-2px);
+.question-card:hover {
+  box-shadow: 0 6px 24px rgba(44,62,80,0.13);
+  transform: translateY(-2px) scale(1.01);
 }
 
-.questao-numero {
-  position: absolute;
-  top: -12px;
-  left: 20px;
-  background: #3a86ff;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(58,134,255,0.3);
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.1rem;
 }
 
-.questao-enunciado {
-  font-size: 1.2rem;
+.question-info {
+  font-size: 1.05rem;
+  color: #1976d2;
   font-weight: 600;
-  color: #263238;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-  padding-top: 0.5rem;
 }
 
-/* Alternativas clicáveis */
-.alternativas {
+.question-difficulty {
+  background: #e3e8ee;
+  color: #2d3a4b;
+  font-size: 0.98rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.25rem 0.8rem;
+}
+
+.question-enunciado {
+  font-size: 1.18rem;
+  color: #263238;
+  margin-bottom: 1.1rem;
+  line-height: 1.6;
+}
+
+.question-alternativas {
   list-style: none;
   padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem; /* Espaçamento entre alternativas */
+  margin: 0 0 1.2rem 0;
 }
 
-.alternativa {
-  background: white;
-  border: 1px solid #e0e4ea;
-  border-radius: 8px;
-  padding: 1rem 1.2rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.question-alternativas li {
+  background: #fff;
+  border-radius: 7px;
+  margin-bottom: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  font-size: 1.05rem;
+  color: #374151;
+  border: 1px solid #e3e8ee;
+  transition: background 0.18s, border 0.18s;
   display: flex;
   align-items: center;
+  gap: 0.7rem;
 }
 
-.alternativa:hover {
+.question-alternativas li.correct-alternative {
+  background: #e8f5e9;
+  border: 1.5px solid #4caf50;
+  color: #256029;
+  font-weight: 600;
+}
+
+.question-alternativas li:hover {
   background: #f0f4fa;
-  border-color: #3a86ff;
-  transform: translateX(5px);
-  box-shadow: 0 2px 8px rgba(58,134,255,0.15);
+  border-color: #1976d2;
 }
 
-.alternativa.selecionada {
-  background: #e3f2fd;
-  border-color: #3a86ff;
-  box-shadow: 0 2px 8px rgba(58,134,255,0.2);
-}
-
-.alternativa-letra {
+.alternative-letter {
   font-weight: 700;
-  color: #3a86ff;
-  margin-right: 1rem;
-  min-width: 24px;
+  color: #1976d2;
+  margin-right: 0.5rem;
 }
 
-.alternativa-texto {
-  font-size: 1.1rem;
-  color: #37474f;
-}
-
-/* Botão de finalizar prova */
-.btn-primary {
-  background: linear-gradient(90deg, #3a86ff 0%, #4361ee 100%);
-  color: white;
-  font-weight: 700;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
+.btn-add-questao {
+  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+  color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
+  padding: 0.7rem 2.1rem;
+  font-size: 1.08rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(58,134,255,0.2);
+  box-shadow: 0 2px 8px rgba(25,118,210,0.07);
+  transition: background 0.18s, box-shadow 0.18s;
+  margin-top: 0.5rem;
+}
+
+.btn-add-questao:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+  box-shadow: 0 4px 16px rgba(25,118,210,0.13);
+}
+
+.btn-add-questao:disabled {
+  background: #b2dfdb;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.no-questions {
+  color: #b71c1c;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 2.5rem 0;
+}
+
+.question-image {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 2.5rem auto 1rem auto;
-  width: auto;
-  min-width: 200px;
+  margin-bottom: 1.1rem;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(90deg, #4361ee 0%, #3a86ff 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(58,134,255,0.3);
+.question-image img {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
 }
 
-.btn-primary:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(58,134,255,0.2);
+.resultado-detalhes {
+  background: #f5f6fa;
+  border-radius: 10px;
+  padding: 1.5rem 1.2rem;
+  margin-top: 2rem;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.06);
 }
 
-.btn-primary::after {
-  content: '✓';
-  font-size: 1.3rem;
+.resultado-detalhes h4 {
+  margin-bottom: 1rem;
 }
 
-/* Modais */
+.resultado-detalhes ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultado-detalhes li {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.acerto {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.erro {
+  color: #F44336;
+  font-weight: 600;
+}
+
+.prova-info {
+  margin-bottom: 2rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+}
+
+#provaTitle {
+  font-size: 1.4rem;
+  color: #1976d2;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+#alunoInfo {
+  font-size: 1.08rem;
+  color: #374151;
+}
+
+.questions-section {
+  margin-top: 1.5rem;
+}
+
+.loading {
+  text-align: center;
+  color: #1976d2;
+  font-size: 1.1rem;
+  margin: 2rem 0;
+}
+
+.question-image {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.1rem;
+}
+
+.question-image img {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+.resultado-detalhes {
+  background: #f5f6fa;
+  border-radius: 10px;
+  padding: 1.5rem 1.2rem;
+  margin-top: 2rem;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+}
+
+.resultado-detalhes h4 {
+  margin-bottom: 1rem;
+}
+
+.resultado-detalhes ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultado-detalhes li {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.acerto {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.erro {
+  color: #F44336;
+  font-weight: 600;
+}
+
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.7);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(44,62,80,0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -248,148 +308,89 @@
 }
 
 .modal-content {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  background: #fff;
+  border-radius: 14px;
+  padding: 2.2rem 2rem 1.5rem 2rem;
+  box-shadow: 0 6px 32px rgba(44,62,80,0.13);
+  min-width: 320px;
+  max-width: 95vw;
   text-align: center;
 }
 
 .modal-content h3 {
-  font-size: 1.6rem;
-  color: #2d3a4b;
+  color: #1976d2;
+  font-size: 1.3rem;
   margin-bottom: 1rem;
-}
-
-.modal-content p {
-  font-size: 1.1rem;
-  color: #546e7a;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
 }
 
-.btn-secondary {
-  background: #e0e4ea;
-  color: #2d3a4b;
+#resultadoConteudo {
+  margin: 1.2rem 0 1.5rem 0;
+  color: #263238;
+  font-size: 1.08rem;
+}
+
+.acerto {
+  color: #4CAF50;
   font-weight: 600;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.btn-secondary:hover {
-  background: #d0d4da;
+.erro {
+  color: #F44336;
+  font-weight: 600;
 }
 
-/* Responsividade */
+.footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: #b0b0b0;
+  font-size: 0.98rem;
+  background: none;
+  box-shadow: none;
+}
+
 @media (max-width: 768px) {
   .container {
-    padding: 1.5rem;
-    margin: 1rem auto;
+    margin: 0.5rem;
+    padding: 1rem 0.5rem;
   }
-  
   .top-bar {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0.7rem;
   }
-  
-  .top-bar .page-title {
-    font-size: 1.5rem;
+  .top-bar-right {
+    width: 100%;
+    justify-content: space-between;
   }
-  
-  .timer {
-    font-size: 1rem;
-    padding: 0.5rem 0.8rem;
+  .prova-info {
+    padding: 0.8rem 0.7rem;
   }
-  
-  .prova-info h2 {
-    font-size: 1.5rem;
+  .modal-content {
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+    min-width: 0;
   }
-  
-  .prova-info #alunoInfo {
-    font-size: 1rem;
+  .questions-section {
+    gap: 1.2rem;
   }
-  
-  .questao {
-    padding: 1.5rem;
+  .question-card {
+    padding: 1.1rem 0.7rem 0.8rem 0.7rem;
   }
-  
-  .questao-enunciado {
-    font-size: 1.1rem;
-  }
-  
-  .alternativa {
-    padding: 0.8rem 1rem;
-  }
-  
-  .alternativa-texto {
+  .question-enunciado {
     font-size: 1rem;
   }
-  
-  .btn-primary {
-    font-size: 1.1rem;
-    padding: 0.8rem 1.5rem;
+  .btn-add-questao {
+    width: 100%;
+    padding: 0.7rem 0;
   }
-}
-
-/* Acessibilidade */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .question-image img {
+    max-height: 140px;
   }
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: #546e7a;
-}
-
-/* Resultado da prova */
-#resultadoConteudo {
-  text-align: left;
-  margin-bottom: 1.5rem;
-}
-
-#resultadoConteudo h4 {
-  font-size: 1.3rem;
-  color: #2d3a4b;
-  margin-bottom: 0.8rem;
-  margin-top: 1.2rem;
-}
-
-#resultadoConteudo p {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-#resultadoConteudo .nota {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #3a86ff;
-  margin: 1rem 0;
-  text-align: center;
-}
-
-/* Estilos para o rodapé */
-.footer {
-  text-align: center;
-  padding: 1.5rem;
-  color: #546e7a;
-  font-size: 0.9rem;
-  margin-top: 2rem;
 }

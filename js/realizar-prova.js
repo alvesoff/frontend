@@ -106,20 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
         
         timer.textContent = `Tempo restante: ${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        
-        // Mudar a cor do timer conforme o tempo passa
-        const percentualRestante = tempoRestante / tempoLimite * 100;
-        
-        if (percentualRestante <= 25) {
-          // Vermelho - menos de 25% do tempo
-          timer.className = 'timer danger';
-        } else if (percentualRestante <= 50) {
-          // Amarelo - menos de 50% do tempo
-          timer.className = 'timer warning';
-        } else {
-          // Verde - mais de 50% do tempo
-          timer.className = 'timer';
-        }
       }
     }, 1000);
   }
@@ -140,57 +126,37 @@ document.addEventListener('DOMContentLoaded', function() {
       const questaoElement = document.createElement('div');
       questaoElement.classList.add('questao');
       
-      // Adicionar número da questão como destaque
-      const numeroQuestao = document.createElement('div');
-      numeroQuestao.classList.add('questao-numero');
-      numeroQuestao.textContent = `${index + 1}`;
-      questaoElement.appendChild(numeroQuestao);
-      
       // Preparar HTML da imagem se existir
       const imagemHTML = questao.imagem ? `<div class="question-image"><img src="${questao.imagem}" alt="Imagem da questão" /></div>` : '';
       
       // Criar HTML da questão
-      questaoElement.innerHTML += `
+      questaoElement.innerHTML = `
+        <div class="questao-header">
+          <h3>Questão ${index + 1}</h3>
+          <span class="questao-dificuldade">${questao.difficulty || 'PADRÃO'}</span>
+        </div>
         <p class="questao-enunciado">${questao.enunciado}</p>
         ${imagemHTML}
-        <ul class="alternativas">
+        <div class="alternativas">
           ${questao.alternativas.map((alt, i) => `
-            <li class="alternativa" data-index="${i}" tabindex="0">
-              <span class="alternativa-letra">${String.fromCharCode(65 + i)}</span>
-              <span class="alternativa-texto">${alt.texto}</span>
-            </li>
+            <div class="alternativa">
+              <input type="radio" name="questao-${index}" id="questao-${index}-alt-${i}" value="${i}">
+              <label for="questao-${index}-alt-${i}">${alt.texto}</label>
+            </div>
           `).join('')}
-        </ul>
+        </div>
       `;
       
-      // Adicionar event listeners para as alternativas clicáveis
-      const alternativas = questaoElement.querySelectorAll('.alternativa');
-      alternativas.forEach(alternativa => {
-        // Adicionar evento de clique
-        alternativa.addEventListener('click', function() {
-          // Remover seleção de todas as alternativas desta questão
-          alternativas.forEach(alt => alt.classList.remove('selecionada'));
-          
-          // Adicionar classe selecionada a esta alternativa
-          this.classList.add('selecionada');
-          
-          // Salvar resposta
-          const altIndex = parseInt(this.getAttribute('data-index'));
-          respostasAluno[index] = altIndex;
-        });
-        
-        // Adicionar evento de teclado para acessibilidade
-        alternativa.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.click();
-          }
+      // Adicionar event listeners para as alternativas
+      const alternativasInputs = questaoElement.querySelectorAll(`input[name="questao-${index}"]`);
+      alternativasInputs.forEach(input => {
+        input.addEventListener('change', function() {
+          respostasAluno[index] = parseInt(this.value);
         });
       });
       
       questoesContainer.appendChild(questaoElement);
     });
-  }
   }
   
   function abrirModalConfirmacao() {
