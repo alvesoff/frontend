@@ -110,14 +110,43 @@
   letter-spacing: 0.03em;
 }
 
-.question-difficulty {
-  display: none; /* Ocultando o elemento de dificuldade conforme solicitado */
-  background: #e3e8ee;
-  color: #2d3a4b;
-  font-size: 0.98rem;
-  font-weight: 500;
-  border-radius: 6px;
-  padding: 0.25rem 0.8rem;
+.question-difficulty, .questao-dificuldade {
+  display: none !important; /* Ocultando o elemento de dificuldade conforme solicitado */
+  visibility: hidden !important; /* Garantindo que fique invisível */
+  opacity: 0 !important; /* Garantindo transparência total */
+  position: absolute !important; /* Removendo do fluxo normal */
+  width: 0 !important; /* Zerando dimensões */
+  height: 0 !important; /* Zerando dimensões */
+  overflow: hidden !important; /* Escondendo qualquer conteúdo que ultrapasse */
+  clip: rect(0, 0, 0, 0) !important; /* Recortando completamente */
+  margin: -1px !important; /* Movendo para fora da área visível */
+  padding: 0 !important; /* Removendo padding */
+  border: 0 !important; /* Removendo borda */
+}
+
+/* Garantindo que o texto 'PADRÃO' não apareça na imagem da questão */
+.questao-header .questao-dificuldade,
+.question-header .question-difficulty {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+/* Ajustando o cabeçalho da questão para não mostrar o elemento de dificuldade */
+.questao-header, .question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.questao-header h3, .question-header h3 {
+  margin: 0;
+  flex: 1;
 }
 
 .question-enunciado {
@@ -204,6 +233,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 1.1rem;
+  position: relative;
 }
 
 .question-image img {
@@ -211,6 +241,23 @@
   max-height: 220px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+/* Ocultando qualquer elemento com texto 'PADRÃO' que possa aparecer na imagem */
+[class*="dificuldade"],
+[class*="difficulty"],
+.questao-header span,
+.question-header span,
+span.questao-dificuldade,
+span.question-difficulty {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
 }
 
 /* Informações da Prova */
