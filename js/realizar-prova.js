@@ -129,21 +129,25 @@ document.addEventListener('DOMContentLoaded', function() {
       // Preparar HTML da imagem se existir
       const imagemHTML = questao.imagem ? `<div class="question-image"><img src="${questao.imagem}" alt="Imagem da questão" /></div>` : '';
       
-      // Criar HTML da questão
+      // Criar HTML da questão com o novo formato solicitado
       questaoElement.innerHTML = `
-        <div class="questao-header">
-          <h3>Questão ${index + 1}</h3>
-          <span class="questao-dificuldade">${questao.difficulty || 'PADRÃO'}</span>
-        </div>
-        <p class="questao-enunciado">${questao.enunciado}</p>
-        ${imagemHTML}
-        <div class="alternativas">
-          ${questao.alternativas.map((alt, i) => `
-            <div class="alternativa">
-              <input type="radio" name="questao-${index}" id="questao-${index}-alt-${i}" value="${i}">
-              <label for="questao-${index}-alt-${i}">${alt.texto}</label>
-            </div>
-          `).join('')}
+        <div class="questao-bloco">
+          <p class="questao-enunciado">${index + 1}) ${questao.enunciado}</p>
+          ${imagemHTML}
+          <ul class="question-alternativas">
+            ${questao.alternativas.map((alt, i) => {
+              const letra = String.fromCharCode(65 + i); // Converte 0->A, 1->B, 2->C, etc.
+              return `
+                <li>
+                  <div class="alternativa-bloco">
+                    <input type="radio" name="questao-${index}" id="questao-${index}-alt-${i}" value="${i}">
+                    <span class="alternative-letter">${letra}</span>
+                    <label for="questao-${index}-alt-${i}">${alt.texto}</label>
+                  </div>
+                </li>
+              `;
+            }).join('')}
+          </ul>
         </div>
       `;
       

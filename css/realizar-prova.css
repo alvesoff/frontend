@@ -190,9 +190,18 @@
 }
 
 .alternative-letter {
-  font-weight: 700;
+  font-weight: 800;
   color: #1976d2;
-  margin-right: 0.5rem;
+  margin-right: 0.8rem;
+  font-size: 1.1rem;
+  background: #e3f2fd;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(25,118,210,0.2);
 }
 
 /* Botão Adicionar Questão */
@@ -348,6 +357,23 @@ span.question-difficulty {
   transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
   margin-bottom: 0.8rem; /* Aumentado o espaçamento entre as alternativas */
   border: 2px solid transparent;
+}
+
+.questoes-container .alternativa-bloco label {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.questao-enunciado {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2d3a4a;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  border-bottom: 1px solid #e3e8ee;
+  padding-bottom: 1rem;
 }
 
 .questoes-container .alternativa-bloco:hover, 
