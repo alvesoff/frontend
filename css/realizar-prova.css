@@ -184,11 +184,6 @@
   font-weight: 600;
 }
 
-.question-alternativas li:hover {
-  background: #f0f4fa;
-  border-color: #1976d2;
-}
-
 .alternative-letter {
   font-weight: 800;
   color: #1976d2;

@@ -137,12 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
           <ul class="question-alternativas">
             ${questao.alternativas.map((alt, i) => {
               const letra = String.fromCharCode(65 + i); // Converte 0->A, 1->B, 2->C, etc.
+              // Remover os dois primeiros caracteres (letra e parêntese) se existirem
+              const textoAlternativa = alt.texto.replace(/^[a-zA-Z]\)\s*/, '');
               return `
                 <li>
                   <div class="alternativa-bloco">
                     <input type="radio" name="questao-${index}" id="questao-${index}-alt-${i}" value="${i}">
                     <span class="alternative-letter">${letra}</span>
-                    <label for="questao-${index}-alt-${i}">${alt.texto}</label>
+                    <label for="questao-${index}-alt-${i}">${textoAlternativa}</label>
                   </div>
                 </li>
               `;
