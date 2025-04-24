@@ -97,16 +97,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.7rem; /* Reduzido para criar mais separação com o enunciado */
+  border-bottom: 1px solid #e3e8ee; /* Linha separadora para melhor distinção visual */
+  padding-bottom: 0.5rem;
 }
 
 .question-info {
-  font-size: 1.05rem;
+  font-size: 0.9rem; /* Reduzido o tamanho da fonte */
   color: #1976d2;
   font-weight: 600;
+  text-transform: uppercase; /* Adicionado para melhor diferenciação */
+  letter-spacing: 0.03em;
 }
 
 .question-difficulty {
+  display: none; /* Ocultando o elemento de dificuldade conforme solicitado */
   background: #e3e8ee;
   color: #2d3a4b;
   font-size: 0.98rem;
@@ -132,7 +137,7 @@
 .question-alternativas li {
   background: #fff;
   border-radius: 7px;
-  margin-bottom: 0.7rem;
+  margin-bottom: 1rem; /* Aumentado o espaçamento entre as alternativas */
   padding: 0.7rem 1.1rem;
   font-size: 1.05rem;
   color: #374151;
@@ -140,7 +145,7 @@
   transition: background 0.18s, border 0.18s;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 1.2rem; /* Aumentado o espaçamento interno entre os elementos */
 }
 
 .question-alternativas li.correct-alternative {
@@ -294,7 +299,7 @@
   box-shadow: 0 1.5px 6px rgba(44,62,80,0.06);
   cursor: pointer;
   transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.8rem; /* Aumentado o espaçamento entre as alternativas */
   border: 2px solid transparent;
 }
 
@@ -308,9 +313,9 @@
 
 .questoes-container .alternativa-bloco input[type="radio"] {
   accent-color: #3a86ff;
-  width: 1.3em;
-  height: 1.3em;
-  margin-right: 1.1em;
+  width: 1.5em; /* Aumentado o tamanho das bolinhas de seleção */
+  height: 1.5em; /* Aumentado o tamanho das bolinhas de seleção */
+  margin-right: 1.3em; /* Aumentado o espaçamento após a bolinha */
   cursor: pointer;
 }
 
