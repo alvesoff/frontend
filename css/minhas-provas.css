@@ -30,7 +30,14 @@
 
 .prova-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+  background-color: #3a86ff;
+  color: #fff;
+}
+
+.prova-card:hover h3,
+.prova-card:hover p {
+  color: #fff;
 }
 
 /* Indicador de status */
