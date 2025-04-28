@@ -67,6 +67,10 @@
             <span class="stat-value" id="totalAlunos">0</span>
             <span class="stat-label">Alunos Avaliados</span>
           </div>
+          <div class="stat-item">
+            <span class="stat-value" id="taxaAprovacao">0%</span>
+            <span class="stat-label">Taxa de Aprovação</span>
+          </div>
         </div>
       </div>
 
@@ -75,10 +79,32 @@
         <h2>Desempenho por Turma</h2>
         <canvas id="desempenhoChart"></canvas>
       </div>
+      
+      <!-- Gráfico de evolução temporal -->
+      <div class="dashboard-card chart-card">
+        <h2>Evolução de Desempenho</h2>
+        <canvas id="evolucaoChart"></canvas>
+      </div>
+      
+      <!-- Gráfico de desempenho por conteúdo -->
+      <div class="dashboard-card chart-card">
+        <h2>Desempenho por Conteúdo</h2>
+        <canvas id="conteudoChart"></canvas>
+      </div>
+
+      <!-- Mapa de calor de desempenho -->
+      <div class="dashboard-card chart-card">
+        <h2>Mapa de Desempenho</h2>
+        <div id="heatmapContainer"></div>
+      </div>
 
       <!-- Lista de resultados -->
       <div class="dashboard-card results-card">
         <h2>Resultados Detalhados</h2>
+        <div class="filter-controls results-filter">
+          <input type="text" id="alunoFilter" class="filter-input" placeholder="Filtrar por aluno...">
+          <button id="btnExportarDetalhes" class="btn-secondary btn-small">Exportar Detalhes</button>
+        </div>
         <div class="results-table-container">
           <table class="results-table">
             <thead>

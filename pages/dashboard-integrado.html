@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Educa Smart - Dashboard Integrado</title>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- CSS específico para dashboard -->
+  <link rel="stylesheet" href="/css/dashboard-professor.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Chart.js para gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- API Config -->
+  <script src="/js/api-config.js"></script>
+  <!-- Dashboard Service -->
+  <script src="/js/dashboard-service.js"></script>
+</head>
+<body>
+  
+  <!-- Cabeçalho -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-top">Educa</span>
+        <span class="logo-bottom">Smart</span>
+      </div>
+      <div class="user-profile">
+        <img src="/img/user-icon.png" alt="Professor" />
+      </div>
+    </nav>
+  </header>
+
+  <!-- Container principal -->
+  <main class="container dashboard-container">
+    <div class="dashboard-header">
+      <h1>Dashboard Integrado</h1>
+      <div class="filter-controls">
+        <select id="turmaFilter" class="filter-select">
+          <option value="">Todas as Turmas</option>
+          <option value="1º Ano">1º Ano</option>
+          <option value="2º Ano">2º Ano</option>
+          <option value="3º Ano">3º Ano</option>
+          <option value="4º Ano">4º Ano</option>
+          <option value="5º Ano">5º Ano</option>
+          <option value="6º Ano">6º Ano</option>
+          <option value="7º Ano">7º Ano</option>
+          <option value="8º Ano">8º Ano</option>
+          <option value="9º Ano">9º Ano</option>
+        </select>
+        <select id="disciplinaFilter" class="filter-select">
+          <option value="">Todas as Disciplinas</option>
+          <!-- Disciplinas serão carregadas dinamicamente -->
+        </select>
+        <select id="provaFilter" class="filter-select">
+          <option value="">Todas as Provas</option>
+          <!-- Provas serão carregadas dinamicamente -->
+        </select>
+        <button id="btnExportar" class="btn-secondary">Exportar Relatório</button>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Resumo geral -->
+      <div class="dashboard-card summary-card">
+        <h2>Resumo Geral</h2>
+        <div class="summary-stats">
+          <div class="stat-item">
+            <span class="stat-value" id="totalProvas">0</span>
+            <span class="stat-label">Provas Realizadas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="mediaGeral">0.0</span>
+            <span class="stat-label">Média Geral</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="totalAlunos">0</span>
+            <span class="stat-label">Alunos Avaliados</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="taxaAprovacao">0%</span>
+            <span class="stat-label">Taxa de Aprovação</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de desempenho por turma -->
+      <div class="dashboard-card chart-card">
+        <h2>Desempenho por Turma</h2>
+        <canvas id="desempenhoChart"></canvas>
+      </div>
+      
+      <!-- Gráfico de questões por disciplina -->
+      <div class="dashboard-card chart-card">
+        <h2>Questões por Disciplina</h2>
+        <canvas id="questoesDisciplinaChart"></canvas>
+      </div>
+      
+      <!-- Gráfico de desempenho por conteúdo -->
+      <div class="dashboard-card chart-card">
+        <h2>Desempenho por Conteúdo</h2>
+        <canvas id="conteudoChart"></canvas>
+      </div>
+
+      <!-- Gráfico de questões por nível de dificuldade -->
+      <div class="dashboard-card chart-card">
+        <h2>Questões por Nível de Dificuldade</h2>
+        <canvas id="dificuldadeChart"></canvas>
+      </div>
+
+      <!-- Lista de resultados -->
+      <div class="dashboard-card results-card">
+        <h2>Resultados Detalhados</h2>
+        <div class="filter-controls results-filter">
+          <input type="text" id="alunoFilter" class="filter-input" placeholder="Filtrar por aluno...">
+          <button id="btnExportarDetalhes" class="btn-secondary btn-small">Exportar Detalhes</button>
+        </div>
+        <div class="results-table-container">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Turma</th>
+                <th>Prova</th>
+                <th>Nota</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <!-- Resultados serão carregados dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Questões Recomendadas -->
+      <div class="dashboard-card">
+        <h2>Questões Recomendadas</h2>
+        <div class="questoes-recomendadas" id="questoesRecomendadas">
+          <!-- Questões recomendadas serão carregadas dinamicamente -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de detalhes da prova -->
+  <div id="modalDetalhes" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h2>Detalhes da Prova</h2>
+      <div id="provaDetalhes"></div>
+      <button class="btn-primary" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>&copy; 2025 Educa Smart - Todos os direitos reservados</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="/js/dashboard-integrado.js"></script>
+</body>
+</html>
