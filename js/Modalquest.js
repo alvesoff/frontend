@@ -24,6 +24,9 @@ if (typeof API_CONFIG === 'undefined') {
   };
 }
 
+// Variável para armazenar a última questão criada
+let ultimaQuestaoCriada = null;
+
 // Elementos do DOM
 document.addEventListener('DOMContentLoaded', function() {
   const btnAddQuestaoPessoal = document.getElementById('btnAddQuestaoPessoal');
@@ -34,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const seriesIndicada = document.getElementById('seriesIndicada');
   const difficulty = document.getElementById('difficulty');
   const questionsSection = document.querySelector('.questions-section');
+  
+  // Elementos do modal de confirmação
+  const modalConfirmacaoAdicao = document.getElementById('modalConfirmacaoAdicao');
+  const closeModalConfirmacao = document.getElementById('closeModalConfirmacao');
+  const btnAdicionarProva = document.getElementById('btnAdicionarProva');
+  const btnNaoAdicionarProva = document.getElementById('btnNaoAdicionarProva');
 
   // Abrir modal de adicionar questão
   if (btnAddQuestaoPessoal) {
@@ -57,6 +66,44 @@ document.addEventListener('DOMContentLoaded', function() {
     modalAddQuestao.addEventListener('click', (e) => {
       if (e.target === modalAddQuestao) {
         modalAddQuestao.style.display = 'none';
+      }
+    });
+  }
+  
+  // Fechar modal de confirmação
+  if (closeModalConfirmacao) {
+    closeModalConfirmacao.addEventListener('click', () => {
+      modalConfirmacaoAdicao.style.display = 'none';
+    });
+  }
+  
+  // Fechar modal de confirmação clicando fora
+  if (modalConfirmacaoAdicao) {
+    modalConfirmacaoAdicao.addEventListener('click', (e) => {
+      if (e.target === modalConfirmacaoAdicao) {
+        modalConfirmacaoAdicao.style.display = 'none';
+      }
+    });
+  }
+  
+  // Botão "Não, apenas salvar"
+  if (btnNaoAdicionarProva) {
+    btnNaoAdicionarProva.addEventListener('click', () => {
+      modalConfirmacaoAdicao.style.display = 'none';
+      // Não faz nada além de fechar o modal
+    });
+  }
+  
+  // Botão "Sim, adicionar à prova"
+  if (btnAdicionarProva) {
+    btnAdicionarProva.addEventListener('click', () => {
+      if (ultimaQuestaoCriada) {
+        // Adicionar à prova atual (utilizando a lógica existente para adicionar questões à prova)
+        addQuestionToCurrentTest(ultimaQuestaoCriada);
+        modalConfirmacaoAdicao.style.display = 'none';
+      } else {
+        alert('Erro: Não foi possível encontrar a questão criada');
+        modalConfirmacaoAdicao.style.display = 'none';
       }
     });
   }
@@ -202,16 +249,27 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Questão salva com sucesso no servidor:', data);
         
-        // Adicionar à interface apenas após salvar com sucesso no banco de dados
+        // Armazenar a questão recém-criada na variável global
+        ultimaQuestaoCriada = {
+          ...newQuestion,
+          id: data._id || data.id || 'temp_' + Date.now(),
+          imagem: imagens.length > 0 ? imagens[0] : null
+        };
+        
+        // Adicionar à interface do repositório de questões
         addPersonalQuestionToUI(newQuestion);
+        
+        // Fechar modal de criação
+        modalAddQuestao.style.display = 'none';
+        
+        // Exibir modal de confirmação
+        modalConfirmacaoAdicao.style.display = 'flex';
+        
       } catch (error) {
         console.error('Erro ao salvar questão no servidor:', error);
         alert('Erro ao salvar questão no servidor: ' + error.message);
         return; // Não continuar se houver erro
       }
-      
-      // Fechar modal
-      modalAddQuestao.style.display = 'none';
     });
   }
   
@@ -252,104 +310,97 @@ document.addEventListener('DOMContentLoaded', function() {
       <button class="btn-add-questao">ADICIONAR</button>
     `;
     
-    // Adicionar evento ao botão
-    // Inside the addPersonalQuestionToUI function, update the button click handler:
-    const addButton = questionCard.querySelector('.btn-add-questao');
-    if (addButton) {
-      addButton.addEventListener('click', async function() {
-        try {
-          // Obter token e ID do professor
-          const token = localStorage.getItem('token');
-          const professorId = localStorage.getItem('professorId');
-          
-          if (!token || !professorId) {
-            alert('Token ou ID do professor não encontrado. Faça login novamente para adicionar questões.');
-            return;
-          }
-          
-          // Adicionar à lista de questões selecionadas no servidor
-          const API_URL = API_CONFIG.QUESTOES_API_URL;
-          
-          // Obter o ID da questão do atributo data-id (precisa ser adicionado ao elemento)
-          const questionId = questionCard.getAttribute('data-id');
-          
-          if (!questionId) {
-            // Se não tiver ID, adicionar diretamente à lista de questões selecionadas
-            const selectedQuestions = JSON.parse(sessionStorage.getItem('selectedQuestions') || localStorage.getItem('selectedQuestions')) || [];
-            selectedQuestions.push({
-              enunciado: question.enunciado,
-              alternativas: question.alternativas.map((alt, index) => `${letters[index]} ${alt}`),
-              correctAlternative: question.correctAlternative,
-              difficulty: question.difficulty,
-              series: question.series,
-              imagem: question.imagem // Incluir a imagem se existir
-            });
-            sessionStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
-          }
-          
-          // Update button state
-          this.textContent = 'ADICIONADA';
-          this.disabled = true;
-          this.style.backgroundColor = '#4CAF50';
-        } catch (error) {
-          console.error('Erro ao adicionar questão:', error);
-          alert('Erro ao adicionar questão: ' + error.message);
-        }
-      });
-    }
-    
     // Adicionar à seção de questões
-    questionsSection.appendChild(questionCard);
+    const questionsSection = document.querySelector('.questions-section');
+    if (questionsSection) {
+      questionsSection.appendChild(questionCard);
+      
+      // Adicionar event listener para o botão de adicionar
+      const btnAdd = questionCard.querySelector('.btn-add-questao');
+      if (btnAdd) {
+        btnAdd.addEventListener('click', function() {
+          const card = this.closest('.question-card');
+          if (card) {
+            const questionData = getQuestionData(card);
+            addQuestionToCurrentTest(questionData);
+            
+            // Atualizar botão após adicionar
+            this.textContent = 'ADICIONADA';
+            this.disabled = true;
+            this.style.backgroundColor = '#4CAF50';
+          }
+        });
+      }
+    }
   }
-
-  // Adicionar event listeners aos botões de adicionar questão existentes
-  const addButtons = document.querySelectorAll('.btn-add-questao');
-  addButtons.forEach(button => {
-    button.addEventListener('click', async function() {
-      try {
-        const questionCard = this.closest('.question-card');
-        const enunciado = questionCard.querySelector('.question-enunciado').textContent;
-        const alternativasElements = questionCard.querySelectorAll('.question-alternativas li');
-        const alternativas = Array.from(alternativasElements).map(li => li.textContent);
-        const correctIndex = Array.from(alternativasElements).findIndex(li => li.classList.contains('correct-alternative'));
-        const difficultyElement = questionCard.querySelector('.question-difficulty');
-        const difficulty = difficultyElement ? difficultyElement.textContent : 'PADRÃO';
+  
+  // Função para adicionar questão à prova atual
+  function addQuestionToCurrentTest(question) {
+    try {
+      // Obter questões já selecionadas
+      const storedQuestions = JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+      
+      // Verificar se a questão já foi adicionada
+      if (!storedQuestions.some(q => q.enunciado === question.enunciado)) {
+        // Adicionar a nova questão
+        storedQuestions.push(question);
         
-        // Obter a imagem se existir
-        const imagemElement = questionCard.querySelector('.question-image img');
-        const imagem = imagemElement ? imagemElement.src : null;
+        // Salvar de volta no localStorage
+        localStorage.setItem('selectedQuestions', JSON.stringify(storedQuestions));
         
-        // Obter token e ID do professor
-        const token = localStorage.getItem('token');
-        const professorId = localStorage.getItem('professorId');
-        
-        if (!token || !professorId) {
-          alert('Token ou ID do professor não encontrado. Faça login novamente para adicionar questões.');
-          return;
+        // Atualizar o contador de questões
+        const numeroQuestoes = document.getElementById('numeroQuestoes');
+        if (numeroQuestoes) {
+          numeroQuestoes.value = storedQuestions.length;
+          localStorage.setItem('numeroQuestoes', numeroQuestoes.value);
         }
         
-        // Adicionar à lista de questões selecionadas no servidor
-        const API_URL = API_CONFIG.QUESTOES_API_URL;
+        console.log('Questão adicionada à prova com sucesso!', question);
         
-        // Adicionar à lista de questões selecionadas temporariamente
-        const selectedQuestions = JSON.parse(sessionStorage.getItem('selectedQuestions') || localStorage.getItem('selectedQuestions')) || [];
-        selectedQuestions.push({
-          enunciado: enunciado,
-          alternativas: alternativas,
-          correctAlternative: correctIndex,
-          difficulty: difficulty,
-          imagem: imagem // Incluir a imagem se existir
-        });
-        sessionStorage.setItem('selectedQuestions', JSON.stringify(selectedQuestions));
-        
-        // Feedback visual
-        this.textContent = 'ADICIONADA';
-        this.disabled = true;
-        this.style.backgroundColor = '#4CAF50';
-      } catch (error) {
-        console.error('Erro ao adicionar questão:', error);
-        alert('Erro ao adicionar questão: ' + error.message);
+        // Feedback para o usuário
+        alert('Questão adicionada à prova com sucesso!');
+      } else {
+        alert("Essa questão já foi adicionada à prova.");
       }
-    });
-  });
+    } catch (error) {
+      console.error('Erro ao adicionar questão à prova:', error);
+      alert('Erro ao adicionar questão à prova: ' + error.message);
+    }
+  }
 });
+
+// Função para extrair dados da questão de um card (precisa estar no escopo global)
+function getQuestionData(card) {
+  const correctAlternativeIndex = Array.from(card.querySelectorAll('.question-alternativas li'))
+    .findIndex(li => li.classList.contains('correct-alternative'));
+  
+  let seriesInfo = '';
+  const questionInfo = card.querySelector('.question-info');
+  if (questionInfo) {
+    const infoText = questionInfo.innerText;
+    if (infoText.includes('|')) {
+      seriesInfo = infoText.split('|')[1]?.trim() || '';
+    }
+  }
+  
+  // Verificar se há imagem
+  let imagem = null;
+  const imagemElement = card.querySelector('.question-image img');
+  if (imagemElement && imagemElement.src) {
+    imagem = imagemElement.src;
+  }
+  
+  return {
+    enunciado: card.querySelector('.question-enunciado').innerHTML,
+    alternativas: Array.from(card.querySelectorAll('.question-alternativas li'))
+      .map(li => {
+        // Remover a letra (a), b), etc) do início do texto da alternativa
+        const text = li.innerText;
+        return text.replace(/^[a-d]\)\s+/i, '');
+      }),
+    difficulty: card.querySelector('.question-difficulty').innerText.trim(),
+    correctAlternative: correctAlternativeIndex >= 0 ? correctAlternativeIndex : 0,
+    series: seriesInfo,
+    imagem: imagem
+  };
+}

@@ -244,6 +244,19 @@
     </div>
   </div>
 
+  <!-- MODAL: CONFIRMAÇÃO DE ADIÇÃO À PROVA -->
+  <div id="modalConfirmacaoAdicao" class="modal-overlay" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+      <button id="closeModalConfirmacao" class="close-modal-btn" aria-label="Fechar modal">&times;</button>
+      <h2>Questão Criada com Sucesso!</h2>
+      <p>Sua questão foi salva no repositório. Deseja adicioná-la à prova atual?</p>
+      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <button id="btnNaoAdicionarProva" class="btn-secondary" style="margin-right: 10px;">Não, apenas salvar</button>
+        <button id="btnAdicionarProva" class="btn-primary">Sim, adicionar à prova</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Rodapé -->
   <footer class="footer">
     <p>© 2025 Educa Smart. Todos os direitos reservados.</p>

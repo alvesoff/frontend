@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Instruções
       doc.setFontSize(10);
       doc.setFont("helvetica", "italic");
-      doc.text("Instruções: Leia atentamente cada questão antes de responder. Não é permitido o uso de material de consulta.", margin, y, { 
+      doc.text("Instruções: Leia atentamente cada questão antes de responder.", margin, y, { 
         maxWidth: textWidth 
       });
       y += 5;
@@ -821,7 +821,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (typeof alt === 'object') {
             textoAlternativa = alt.texto;
           }
-          const textoLimpo = textoAlternativa.replace(/<\/?[^>]+(>|$)/g, "").trim();
+          
+          // Remover qualquer letra de alternativa que já esteja no texto
+          // Isso evita duplicação como "a) a) texto..."
+          const textoLimpo = textoAlternativa.replace(/<\/?[^>]+(>|$)/g, "").trim()
+                             .replace(/^[a-d]\)\s+/i, '') // Remove "a) " do início se existir
+                             .replace(/^[a-d]\.\s+/i, ''); // Remove "a. " do início se existir
           
           // Se for a alternativa correta, define cor verde
           if (isCorrect) {
@@ -867,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
         doc.setFontSize(8);
-        doc.text(`Página ${i} de ${totalPages}`, pageWidth - 15, doc.internal.pageSize.getHeight() - 10);
+        doc.text(`Página ${i}`, pageWidth - 15, doc.internal.pageSize.getHeight() - 10);
       }
       
       // Salva o PDF com o nome da prova e código
