@@ -2,6 +2,14 @@
 // LOGIN-ALUNO.JS
 // ===========================
 
+// Função para obter parâmetros da URL
+function getUrlParameter(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  const results = regex.exec(location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
 // Função para registrar o acesso do aluno no banco de dados
 async function registrarAcessoAluno(studentInfo, prova) {
   try {
@@ -47,6 +55,18 @@ async function registrarAcessoAluno(studentInfo, prova) {
 
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
+  
+  // Verificar se existe o parâmetro 'codigo' na URL e preencher o campo
+  const codigoProva = getUrlParameter('codigo');
+  if (codigoProva) {
+    const examCodeInput = document.getElementById('examCode');
+    if (examCodeInput) {
+      examCodeInput.value = codigoProva;
+      // Destacar visualmente o campo preenchido automaticamente
+      examCodeInput.style.backgroundColor = '#f0f8ff';
+      examCodeInput.style.borderColor = '#3a86ff';
+    }
+  }
   
   // Usar a configuração centralizada da API
   // A URL já está sendo usada nas chamadas fetch abaixo

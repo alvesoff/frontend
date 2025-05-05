@@ -675,52 +675,210 @@ document.addEventListener('DOMContentLoaded', () => {
         format: 'a4'
       });
       
-      let y = 10; // Posição inicial vertical no PDF
+      // Variáveis para controle de posicionamento
+      let y = 20; // Posição inicial vertical no PDF
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 10;
+      const textWidth = pageWidth - (margin * 2);
       
-      // Cabeçalho do PDF
+      // Configurações de formatação
+      const dataAtual = new Date().toLocaleDateString('pt-BR');
+      const professorNome = localStorage.getItem('professorNome') || 'Professor';
+      
+      // ===== CABEÇALHO DO PDF =====
+      // Logo ou nome da instituição
       doc.setFont("helvetica", "bold");
-      doc.text("Prova Gerada", 10, y);
+      doc.setFontSize(16);
+      doc.text("Educa Smart", pageWidth/2, y, { align: 'center' });
+      y += 8;
+      
+      // Nome da prova
+      doc.setFontSize(14);
+      doc.text(provaData.nomeProva, pageWidth/2, y, { align: 'center' });
       y += 10;
       
-      // Adiciona o código da prova ao PDF
-      doc.text(`Código da prova: ${codigoProva}`, 10, y);
+      // Informações adicionais
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Data de criação: ${dataAtual}`, margin, y);
+      doc.text(`Professor: ${professorNome}`, pageWidth - margin, y, { align: 'right' });
+      y += 6;
+      
+      // Código da prova
+      doc.setFont("helvetica", "bold");
+      doc.text(`Código da prova: ${codigoProva}`, pageWidth/2, y, { align: 'center' });
+      y += 6;
+      
+      // Adiciona disciplinas
+      const disciplinas = [...(provaData.componentesFundamental || []), ...(provaData.componentesMedio || [])].join(', ');
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Disciplinas: ${disciplinas}`, pageWidth/2, y, { align: 'center' });
+      y += 10;
+      
+      // Link direto para acesso do aluno
+      const baseUrl = window.location.origin; // Obtém a base URL do site
+      const loginUrl = `${baseUrl}/pages/login-aluno.html?codigo=${codigoProva}`;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 102, 204); // Azul para link
+      doc.text("LINK PARA ACESSAR A PROVA:", margin, y);
+      y += 6;
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      // Adiciona link clicável
+      const linkText = `${loginUrl}`;
+      doc.textWithLink(linkText, margin, y, { url: loginUrl });
+      y += 10;
+      
+      doc.setTextColor(0, 0, 0); // Volta para cor preta
+      
+      // Gerar QR code
+      try {
+        // Criamos o QR code em uma tag canvas invisível
+        const canvas = document.createElement('canvas');
+        const qr = new QRious({
+          element: canvas,
+          value: loginUrl,
+          size: 150, // Tamanho do QR code em pixels
+          backgroundAlpha: 0
+        });
+        
+        // Converter o canvas para imagem base64
+        const qrCodeImage = canvas.toDataURL('image/png');
+        
+        // Adicionar o QR code ao PDF
+        const qrCodeX = pageWidth - 50 - margin; // Posicionar à direita da página
+        const qrCodeY = y - 35; // Ajustar para ficar ao lado do link
+        
+        doc.addImage(qrCodeImage, 'PNG', qrCodeX, qrCodeY, 50, 50); // Adicionar o QR code
+        
+        // Adicionar texto abaixo do QR code
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "italic");
+        doc.text("Escaneie para acessar", qrCodeX + 25, qrCodeY + 55, { align: 'center' });
+      } catch (error) {
+        console.error('Erro ao gerar QR code:', error);
+        // Não interromper a geração do PDF se o QR code falhar
+      }
+      
+      // Linha separadora
+      doc.setDrawColor(0, 0, 0);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 10;
+      
+      // Instruções
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "italic");
+      doc.text("Instruções: Leia atentamente cada questão antes de responder. Não é permitido o uso de material de consulta.", margin, y, { 
+        maxWidth: textWidth 
+      });
+      y += 5;
+      
+      doc.text("Para acessar a prova, abra o link acima ou digite o código da prova na página de login.", margin, y, { 
+        maxWidth: textWidth 
+      });
+      y += 10;
+      
+      // ===== CONTEÚDO DA PROVA (QUESTÕES) =====
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("QUESTÕES", pageWidth/2, y, { align: 'center' });
       y += 10;
       
       // Percorre cada questão e adiciona ao PDF
       selectedQuestions.forEach((q, index) => {
-        doc.setFont("helvetica", "normal");
+        // Número da questão
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text(`Questão ${index + 1}`, margin, y);
+        y += 6;
+        
         // Enunciado da questão
-        doc.text(`${index + 1}. ${q.enunciado}`, 10, y);
-        y += 7;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        
+        // Trata o texto para remover tags HTML
+        const enunciadoLimpo = q.enunciado.replace(/<\/?[^>]+(>|$)/g, "").trim();
+        
+        // Adiciona o enunciado com quebra de linha automática
+        const splitEnunciado = doc.splitTextToSize(enunciadoLimpo, textWidth);
+        doc.text(splitEnunciado, margin, y);
+        
+        // Aumenta o y baseado no número de linhas do enunciado
+        y += splitEnunciado.length * 5;
         
         // Adiciona as alternativas
+        doc.setFontSize(10);
         q.alternativas.forEach((alt, idx) => {
           let letter = String.fromCharCode(97 + idx) + ')';
           let isCorrect = idx === parseInt(q.correctAlternative, 10);
           
+          // Tratar o texto da alternativa
+          let textoAlternativa = alt;
+          if (typeof alt === 'object') {
+            textoAlternativa = alt.texto;
+          }
+          const textoLimpo = textoAlternativa.replace(/<\/?[^>]+(>|$)/g, "").trim();
+          
           // Se for a alternativa correta, define cor verde
           if (isCorrect) {
             doc.setTextColor(0, 128, 0);
+            doc.setFont("helvetica", "bold");
           } else {
             doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
           }
-          doc.text(`${letter} ${alt}`, 15, y);
-          y += 5;
+          
+          // Adiciona a alternativa com quebra de linha automática
+          const splitAlternativa = doc.splitTextToSize(`${letter} ${textoLimpo}`, textWidth - 5);
+          doc.text(splitAlternativa, margin + 5, y);
+          
+          // Aumenta o y baseado no número de linhas da alternativa
+          y += splitAlternativa.length * 5 + 2;
         });
         
         // Reseta a cor e adiciona um espaço entre as questões
         doc.setTextColor(0, 0, 0);
-        y += 10;
+        doc.setFont("helvetica", "normal");
+        y += 8;
         
         // Se ultrapassar o fim da página, adiciona uma nova página
         if (y > 270) {
           doc.addPage();
-          y = 10;
+          // Adiciona cabeçalho simples na nova página
+          y = 15;
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${provaData.nomeProva} - Página ${doc.internal.getNumberOfPages()}`, pageWidth/2, 10, { align: 'center' });
         }
       });
       
-      // Salva o PDF com o nome "prova.pdf"
-      doc.save('prova.pdf');
+      // Adiciona rodapé na última página
+      y = Math.min(y + 10, 280);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "italic");
+      doc.text("Gerado automaticamente pelo sistema Educa Smart.", pageWidth/2, y, { align: 'center' });
+      
+      // Adiciona numeração em todas as páginas
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.text(`Página ${i} de ${totalPages}`, pageWidth - 15, doc.internal.pageSize.getHeight() - 10);
+      }
+      
+      // Salva o PDF com o nome da prova e código
+      const nomeArquivo = `${provaData.nomeProva.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${codigoProva}.pdf`;
+      doc.save(nomeArquivo);
+      
+      // Redireciona para a área do aluno após o download
+      setTimeout(() => {
+        localStorage.removeItem('selectedQuestions');
+        window.location.href = '/pages/login-aluno.html';
+      }, 1000); // Aguarda 1 segundo para garantir que o download tenha iniciado
     } catch (error) {
       console.error('Erro ao salvar prova:', error);
       alert('Ocorreu um erro ao salvar a prova. Por favor, tente novamente.');
