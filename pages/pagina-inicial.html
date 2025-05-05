@@ -75,7 +75,7 @@
       <!-- Botões de acesso rápido -->
       <div class="access-buttons" style="gap: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap;">
         <a href="login-aluno.html" class="btn-access" style="background: #fff; color: #3a86ff; border: 2px solid #3a86ff; border-radius: 2rem; font-weight: 700; padding: 0.7rem 1.8rem; font-size: 1rem; transition: background 0.2s, color 0.2s;">Acesso do Aluno</a>
-        <a href="dashboard-professor.html" class="btn-access" style="background: #fff; color: #ffbe0b; border: 2px solid #ffbe0b; border-radius: 2rem; font-weight: 700; padding: 0.7rem 1.8rem; font-size: 1rem; transition: background 0.2s, color 0.2s;">Dashboard</a>
+        <a href="#" id="dashboardBtn" class="btn-access" style="background: #fff; color: #ffbe0b; border: 2px solid #ffbe0b; border-radius: 2rem; font-weight: 700; padding: 0.7rem 1.8rem; font-size: 1rem; transition: background 0.2s, color 0.2s;">Dashboard</a>
       </div>
     </section>
 
@@ -83,6 +83,23 @@
       <img src="../img/blocks-kids.png" alt="Desenho de crianças com blocos" class="responsive-image" style="width: 60%; max-width: 300px;" />
     </div>
   </main>
+
+  <!-- ==========================
+       MODAL MANUTENÇÃO DASHBOARD
+  ========================== -->
+  <div id="dashboardMaintenanceModal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="closeDashboardModal" class="close-modal-btn">&times;</button>
+      <div style="text-align: center; padding: 1rem;">
+        <h2 style="color: #e63946; font-size: 1.8rem; margin-bottom: 0.5rem;">
+          <span style="font-size: 2rem; margin-right: 0.5rem;">⚠️</span> EM MANUTENÇÃO
+        </h2>
+        <p style="color: #555; font-size: 1.1rem; line-height: 1.5; margin-top: 1rem;">
+          Estamos fazendo uma manutenção para melhor controle de provas, estatísticas e gráficos de curvas de aprendizagem mais elaboradas.
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- ==========================
        MODAL 1: ESCOLARIDADE
@@ -177,5 +194,32 @@
   <script src="../js/script.js"></script>
   <!-- Script para Minhas Provas -->
   <script src="../js/minhas-provas.js"></script>
+
+  <!-- Script para o modal de manutenção do Dashboard -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dashboardBtn = document.getElementById('dashboardBtn');
+      const dashboardModal = document.getElementById('dashboardMaintenanceModal');
+      const closeDashboardModal = document.getElementById('closeDashboardModal');
+      
+      // Abrir o modal quando o botão Dashboard for clicado
+      dashboardBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        dashboardModal.style.display = 'flex';
+      });
+      
+      // Fechar o modal quando o botão de fechar for clicado
+      closeDashboardModal.addEventListener('click', function() {
+        dashboardModal.style.display = 'none';
+      });
+      
+      // Fechar o modal quando clicar fora dele
+      window.addEventListener('click', function(e) {
+        if (e.target === dashboardModal) {
+          dashboardModal.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
