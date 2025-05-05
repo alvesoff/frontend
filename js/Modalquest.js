@@ -294,17 +294,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Preparar HTML da imagem se existir
     const imagemHTML = question.imagem ? `<div class="question-image"><img src="${question.imagem}" alt="Imagem da questão" /></div>` : '';
     
+    // Formatar as tags em um formato de badges
+    let tagsHTML = '';
+    if (question.tags && question.tags.length > 0) {
+      tagsHTML = `
+        <div class="question-tags">
+          ${question.tags.map(tag => `<span class="question-tag">${tag}</span>`).join('')}
+        </div>
+      `;
+    }
+    
+    // Determinar classe de dificuldade para colorização
+    let difficultyClass = '';
+    if (question.difficulty && typeof question.difficulty === 'string') {
+      const lowerDiff = question.difficulty.toLowerCase();
+      if (lowerDiff.includes('fácil') || lowerDiff.includes('facil')) {
+        difficultyClass = 'difficulty-easy';
+      } else if (lowerDiff.includes('médio') || lowerDiff.includes('medio')) {
+        difficultyClass = 'difficulty-medium';
+      } else if (lowerDiff.includes('difícil') || lowerDiff.includes('dificil')) {
+        difficultyClass = 'difficulty-hard';
+      }
+    }
+    
     // Criar HTML da questão
     questionCard.innerHTML = `
       <div class="question-header">
-        <span class="question-info">Questão Pessoal | (${question.series})</span>
-        <span class="question-difficulty">${question.difficulty}</span>
+        <span class="question-info">Questão ${question.disciplina || 'Pessoal'} | ${question.series}</span>
+        <span class="question-difficulty ${difficultyClass}">${question.difficulty}</span>
       </div>
       <p class="question-enunciado">${question.enunciado}</p>
       ${imagemHTML}
+      ${tagsHTML}
       <ul class="question-alternativas">
         ${question.alternativas.map((alt, index) => 
-          `<li ${index === question.correctAlternative ? 'class="correct-alternative"' : ''}>${letters[index]} ${alt}</li>`
+          `<li ${index === question.correctAlternative ? 'class="correct-alternative"' : ''}>
+            <span class="alternative-letter">${letters[index]}</span> ${alt}
+          </li>`
         ).join('')}
       </ul>
       <button class="btn-add-questao">ADICIONAR</button>

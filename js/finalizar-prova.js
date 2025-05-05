@@ -145,9 +145,9 @@ function exibirQuestoes(questoes) {
     if (typeof seriesInfo === 'string' || typeof seriesInfo === 'number') {
       // Formatar o ano escolar corretamente
       const anoFormatado = seriesInfo.toString();
-      seriesInfo = `(${anoFormatado}º Ano)`;
+      seriesInfo = `${anoFormatado}º Ano`;
     } else {
-      seriesInfo = '(Ano não especificado)';
+      seriesInfo = 'Ano não especificado';
     }
     
     // Verificar o formato das alternativas (API v1 pode ter formato diferente)
@@ -171,9 +171,24 @@ function exibirQuestoes(questoes) {
       alternativasHTML = '<li>Sem alternativas disponíveis</li>';
     }
     
-    // Verificar se há tags para exibir
-    const tagsHTML = questao.tags && questao.tags.length > 0 ? 
-      `<div class="question-tags"><span>Tags:</span> ${Array.isArray(questao.tags) ? questao.tags.join(', ') : questao.tags}</div>` : '';
+    // Melhorar exibição das tags usando o formato de badges
+    let tagsHTML = '';
+    if (questao.tags && questao.tags.length > 0) {
+      // Garantir que as tags estejam em um array
+      const tagsArray = Array.isArray(questao.tags) 
+        ? questao.tags 
+        : typeof questao.tags === 'string' 
+          ? questao.tags.split(',').map(tag => tag.trim()) 
+          : [];
+      
+      if (tagsArray.length > 0) {
+        tagsHTML = `
+          <div class="question-tags">
+            ${tagsArray.map(tag => `<span class="question-tag">${tag}</span>`).join('')}
+          </div>
+        `;
+      }
+    }
     
     // Verificar se há imagem para exibir (suporta tanto campo 'imagem' quanto 'imagens')
     let imagemHTML = '';
@@ -184,10 +199,25 @@ function exibirQuestoes(questoes) {
       imagemHTML = `<div class="question-image"><img src="${questao.imagens[0]}" alt="Imagem da questão" /></div>`;
     }
     
+    // Determinar classe de dificuldade para colorização
+    const dificuldade = questao.nivelDificuldade || questao.dificuldade || 'PADRÃO';
+    let difficultyClass = '';
+    
+    if (typeof dificuldade === 'string') {
+      const lowerDiff = dificuldade.toLowerCase();
+      if (lowerDiff.includes('fácil') || lowerDiff.includes('facil')) {
+        difficultyClass = 'difficulty-easy';
+      } else if (lowerDiff.includes('médio') || lowerDiff.includes('medio')) {
+        difficultyClass = 'difficulty-medium';
+      } else if (lowerDiff.includes('difícil') || lowerDiff.includes('dificil')) {
+        difficultyClass = 'difficulty-hard';
+      }
+    }
+    
     card.innerHTML = `
       <div class="question-header">
         <span class="question-info">Questão ${questao.disciplina || 'Geral'} | ${seriesInfo}</span>
-        <span class="question-difficulty">${questao.nivelDificuldade || questao.dificuldade || 'PADRÃO'}</span>
+        <span class="question-difficulty ${difficultyClass}">${dificuldade}</span>
       </div>
       <p class="question-enunciado">${questao.enunciado || 'Sem enunciado'}</p>
       ${imagemHTML}

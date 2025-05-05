@@ -218,66 +218,164 @@ html, body {
 }
 
 .question-card {
-  background-color: #f8f8f8;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.question-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .question-header {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.8rem;
 }
 
 .question-info {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #444;
+  color: #3a86ff;
+  display: flex;
+  align-items: center;
 }
 
 /* NOVO: Exibição do nível de dificuldade */
 .question-difficulty {
-  background-color: #eee;
-  color: #555;
-  font-size: 0.8rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 3px;
-  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Cores diferentes para níveis de dificuldade */
+.question-difficulty:contains("Fácil"), .difficulty-easy {
+  background-color: #e0f2e9;
+  color: #2e7d32;
+}
+
+.question-difficulty:contains("Médio"), .difficulty-medium {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.question-difficulty:contains("Difícil"), .difficulty-hard {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Estilos para as Tags */
+.question-tags {
+  margin: 0.8rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.question-tag {
+  background-color: #f0f7ff;
+  color: #3a86ff;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid #d0e1ff;
+  display: inline-block;
 }
 
 .question-enunciado {
-  margin: 0.5rem 0;
-  line-height: 1.4;
-  max-height: 200px;
-  overflow-y: auto;
+  margin: 0.8rem 0;
+  line-height: 1.5;
+  font-size: 1rem;
+  color: #333;
+  max-height: none;
+  overflow: visible;
   word-wrap: break-word;
   white-space: pre-wrap;
   padding-right: 0.5rem;
+  font-weight: 500;
 }
 
 .question-alternativas {
   list-style-type: none;
-  margin: 0.5rem 0;
-  padding-left: 1rem;
-  max-height: 150px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+  margin: 1rem 0;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
 }
 
 .question-alternativas li {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.6rem;
+  padding: 0.7rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.question-alternativas li:hover {
+  background-color: #f0f0f0;
+}
+
+.question-alternativas li.correct-alternative {
+  background-color: #e0f7e6;
+  border-left: 4px solid #2e7d32;
+}
+
+.alternative-letter {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  color: #3a86ff;
 }
 
 .btn-add-questao {
-  margin-top: 0.5rem;
-  background-color: #0020F2;
+  margin-top: 1rem;
+  background-color: #3a86ff;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+}
+
+.btn-add-questao:hover {
+  background-color: #2970e3;
+}
+
+.btn-add-questao:disabled {
+  background-color: #4CAF50;
+  cursor: not-allowed;
+}
+
+/* Estilos para imagens nas questões */
+.question-image {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.question-image img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* ===== RODAPÉ ===== */
