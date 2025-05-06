@@ -794,11 +794,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Não interromper a geração do PDF se o QR code falhar
       }
       
-      // Linha separadora
-      doc.setDrawColor(0, 0, 0);
-      doc.line(margin, y, pageWidth - margin, y);
-      y += 10;
-      
       // Instruções
       doc.setFontSize(10);
       doc.setFont("helvetica", "italic");

@@ -166,9 +166,9 @@ document.addEventListener('DOMContentLoaded', function() {
         enunciado: questionText.innerHTML,
         alternativas: alternatives,
         correctAlternative: parseInt(correctAlternative.value),
-        series: seriesIndicada.value,
+        series: `(${seriesIndicada.value})`,
         disciplina: disciplinaQuestao.value,
-        difficulty: difficulty.value,
+        difficulty: difficulty.value.charAt(0).toUpperCase() + difficulty.value.slice(1).toLowerCase(),
         tags: tags
       };
       

@@ -110,6 +110,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
   }
   
+  // Função para embaralhar array usando o algoritmo Fisher-Yates
+  function embaralharArray(array) {
+    console.log('Array original antes do embaralhamento:', array);
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    console.log('Array após o embaralhamento:', array);
+    return array;
+  }
+
   function carregarQuestoes() {
     questoesContainer.innerHTML = '';
     
@@ -118,11 +129,17 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    // Inicializar array de respostas do aluno
-    respostasAluno = new Array(prova.questoes.length).fill(null);
+    console.log('Iniciando carregamento das questões. Total de questões:', prova.questoes.length);
     
-    // Criar elementos para cada questão
-    prova.questoes.forEach((questao, index) => {
+    // Criar uma cópia do array de questões e embaralhar
+    const questoesEmbaralhadas = embaralharArray([...prova.questoes]);
+    
+    // Inicializar array de respostas do aluno
+    respostasAluno = new Array(questoesEmbaralhadas.length).fill(null);
+    console.log('Array de respostas inicializado:', respostasAluno);
+    
+    // Criar elementos para cada questão usando o array embaralhado
+    questoesEmbaralhadas.forEach((questao, index) => {
       const questaoElement = document.createElement('div');
       questaoElement.classList.add('questao');
       
@@ -158,6 +175,10 @@ document.addEventListener('DOMContentLoaded', function() {
       alternativasInputs.forEach(input => {
         input.addEventListener('change', function() {
           respostasAluno[index] = parseInt(this.value);
+          console.log(`Resposta selecionada para questão ${index + 1}:`, {
+            alternativa: this.value,
+            textoAlternativa: questoesEmbaralhadas[index].alternativas[parseInt(this.value)].texto
+          });
         });
       });
       
@@ -267,6 +288,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })).filter(r => r.alternativaSelecionada !== -1) // Remover questões não respondidas
       };
       
+      console.log('Dados sendo enviados para finalização da prova:', dadosAtualizacao);
+      
       // Enviar resultado para o backend usando a rota correta
       try {
         const response = await fetch(`${API_CONFIG.BASE_URL}/api/resultados/finalizar`, {
@@ -294,6 +317,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Limpar dados temporários do localStorage após salvar no banco
         localStorage.removeItem('selectedQuestions');
         localStorage.removeItem('currentProva');
+        
+        // Exibir mensagem de sucesso
+        alert('Prova enviada com sucesso!');
+        // Redirecionar para a página de login do aluno
+        window.location.href = '/pages/login-aluno.html';
         
         return response;
       } catch (error) {
@@ -343,14 +371,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function fecharModalResultado() {
     modalResultado.style.display = 'none';
-    // Não limpa os dados nem redireciona ao fechar o modal
-    // Os dados serão limpos apenas quando o usuário sair da página
-    
-    // Verificar se as questões ainda estão visíveis, se não estiverem, recarregá-las
-    if (questoesContainer.children.length === 0 || questoesContainer.innerHTML === '') {
-      console.log('Recarregando questões após fechar o modal de resultado');
-      carregarQuestoes();
-    }
+    // Exibir mensagem de sucesso
+    alert('Prova enviada com sucesso!');
+    // Redirecionar para a página de login do aluno
+    window.location.href = '/pages/login-aluno.html';
   }
   
   // Adicionar evento para limpar selectedQuestions ao carregar a página
