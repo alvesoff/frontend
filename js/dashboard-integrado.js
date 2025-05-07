@@ -15,11 +15,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const turmaFilter = document.getElementById('turmaFilter');
   const disciplinaFilter = document.getElementById('disciplinaFilter');
   const provaFilter = document.getElementById('provaFilter');
+  const periodoFilter = document.getElementById('periodoFilter');
   const alunoFilter = document.getElementById('alunoFilter');
+  const alunoSearchFilter = document.getElementById('alunoSearchFilter');
   const btnExportar = document.getElementById('btnExportar');
   const btnExportarDetalhes = document.getElementById('btnExportarDetalhes');
   const resultsTableBody = document.getElementById('resultsTableBody');
   const questoesRecomendadas = document.getElementById('questoesRecomendadas');
+  const questoesDificeisTableBody = document.getElementById('questoesDificeisTableBody');
+  const alunosTableBody = document.getElementById('alunosTableBody');
 
   // Estatísticas
   const totalProvasElement = document.getElementById('totalProvas');
@@ -27,15 +31,48 @@ document.addEventListener('DOMContentLoaded', async () => {
   const totalAlunosElement = document.getElementById('totalAlunos');
   const taxaAprovacaoElement = document.getElementById('taxaAprovacao');
 
+  // Abas
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabPanes = document.querySelectorAll('.tab-pane');
+
   // Gráficos
   let desempenhoChart;
   let questoesDisciplinaChart;
   let conteudoChart;
   let dificuldadeChart;
+  let evolucaoTemporalChart;
+  let distribuicaoNotasChart;
+  let mediaTurmaChart;
+  let mediaPorConteudoChart;
+  let comparativoTurmasChart;
+  let alternativasChart;
+  let evolucaoAlunoChart;
 
   // Dados do dashboard
   let dashboardData = null;
   let filteredData = null;
+  let alunoSelecionado = null;
+
+  // Inicializar sistema de abas
+  function inicializarAbas() {
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remover classe ativa de todos os botões
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        // Adicionar classe ativa ao botão clicado
+        this.classList.add('active');
+        
+        // Obter o id da aba a ser mostrada
+        const tabId = this.getAttribute('data-tab');
+        
+        // Esconder todas as abas
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+        
+        // Mostrar a aba correspondente
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+      });
+    });
+  }
 
   // Carregar dados do dashboard
   async function carregarDados() {
@@ -70,6 +107,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Atualizar dashboard
       atualizarDashboard();
+
+      // Inicializar sistema de abas
+      inicializarAbas();
 
       // Esconder indicador de carregamento
       exibirCarregando(false);
@@ -145,8 +185,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Atualizar estatísticas
     atualizarEstatisticas();
 
-    // Atualizar gráficos
-    atualizarGraficos();
+    // Atualizar gráficos básicos
+    atualizarGraficosBasicos();
+
+    // Atualizar estatísticas avançadas
+    atualizarEstatisticasAvancadas();
 
     // Atualizar tabela de resultados
     atualizarTabelaResultados();
@@ -184,8 +227,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     taxaAprovacaoElement.textContent = `${taxaAprovacao}%`;
   }
 
-  // Atualizar gráficos do dashboard
-  function atualizarGraficos() {
+  // Atualizar gráficos básicos do dashboard
+  function atualizarGraficosBasicos() {
     // Gráfico de desempenho por turma
     atualizarGraficoDesempenho();
     
@@ -199,259 +242,626 @@ document.addEventListener('DOMContentLoaded', async () => {
     atualizarGraficoDificuldade();
   }
 
-  // Atualizar gráfico de desempenho por turma
-  function atualizarGraficoDesempenho() {
-    // Agrupar resultados por turma e calcular média
-    const desempenhoPorTurma = {};
-    const contagemPorTurma = {};
+  // Atualizar gráficos de estatísticas avançadas
+  function atualizarEstatisticasAvancadas() {
+    // Verificar se temos os dados de estatísticas avançadas
+    if (!filteredData.estatisticas || !filteredData.estatisticas.avancadas) {
+      console.warn('Dados de estatísticas avançadas não disponíveis');
+      return;
+    }
+
+    const estatisticasAvancadas = filteredData.estatisticas.avancadas;
+
+    // Atualizar os diferentes gráficos de estatísticas avançadas
+    atualizarGraficoEvolucaoTemporal(estatisticasAvancadas);
+    atualizarGraficoDistribuicaoNotas(estatisticasAvancadas);
+    atualizarGraficoMediaTurma(estatisticasAvancadas);
+    atualizarGraficoMediaPorConteudo(estatisticasAvancadas);
+    atualizarTabelaQuestoesDificeis(estatisticasAvancadas);
+    atualizarTabelaDesempenhoAlunos(estatisticasAvancadas);
+    criarMapaCalor(estatisticasAvancadas);
+  }
+
+  // Atualizar gráfico de evolução temporal
+  function atualizarGraficoEvolucaoTemporal(estatisticasAvancadas) {
+    const ctx = document.getElementById('evolucaoTemporalChart').getContext('2d');
+    const dados = estatisticasAvancadas.evoluçãoTemporal || [];
+
+    if (dados.length === 0) {
+      ctx.canvas.parentNode.innerHTML = '<p class="no-data-message">Não há dados suficientes para mostrar a evolução temporal.</p>';
+      return;
+    }
+
+    // Preparar dados para o gráfico
+    const labels = dados.map(item => item.periodo);
+    const valores = dados.map(item => parseFloat(item.media));
     
-    filteredData.resultados.forEach(resultado => {
-      if (!desempenhoPorTurma[resultado.turma]) {
-        desempenhoPorTurma[resultado.turma] = 0;
-        contagemPorTurma[resultado.turma] = 0;
-      }
-      desempenhoPorTurma[resultado.turma] += resultado.nota;
-      contagemPorTurma[resultado.turma]++;
-    });
-    
-    // Calcular médias
-    const turmas = Object.keys(desempenhoPorTurma);
-    const medias = turmas.map(turma => {
-      return contagemPorTurma[turma] > 0 ? 
-        (desempenhoPorTurma[turma] / contagemPorTurma[turma]).toFixed(1) : 0;
-    });
-    
-    // Configurar dados do gráfico
     const data = {
-      labels: turmas,
+      labels: labels,
       datasets: [{
-        label: 'Média de Notas',
-        data: medias,
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        label: 'Média de Acertos (%)',
+        data: valores,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
+        borderWidth: 2,
+        tension: 0.3,
+        fill: true
       }]
     };
     
-    // Criar ou atualizar gráfico
-    const ctx = document.getElementById('desempenhoChart').getContext('2d');
-    
-    if (desempenhoChart) {
-      desempenhoChart.data = data;
-      desempenhoChart.update();
-    } else {
-      desempenhoChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 10
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y.toFixed(2) + '%';
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Porcentagem de Acertos'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Período'
             }
           }
         }
-      });
+      }
+    };
+
+    // Criar ou atualizar gráfico
+    if (evolucaoTemporalChart) {
+      evolucaoTemporalChart.data = data;
+      evolucaoTemporalChart.update();
+    } else {
+      evolucaoTemporalChart = new Chart(ctx, config);
     }
   }
 
-  // Atualizar gráfico de questões por disciplina
-  function atualizarGraficoQuestoesDisciplina() {
-    // Verificar se temos estatísticas de questões
-    if (!filteredData.estatisticas || !filteredData.estatisticas.questoes || !filteredData.estatisticas.questoes.porDisciplina) {
+  // Atualizar gráfico de distribuição de notas
+  function atualizarGraficoDistribuicaoNotas(estatisticasAvancadas) {
+    const ctx = document.getElementById('distribuicaoNotasChart').getContext('2d');
+    const dados = estatisticasAvancadas.distribuicaoNotas || [];
+
+    if (dados.length === 0) {
+      ctx.canvas.parentNode.innerHTML = '<p class="no-data-message">Não há dados suficientes para mostrar a distribuição de notas.</p>';
       return;
     }
+
+    // Preparar dados para o gráfico
+    const labels = dados.map(item => item.faixa);
+    const valores = dados.map(item => item.quantidade);
     
-    const estatisticas = filteredData.estatisticas.questoes.porDisciplina;
-    const disciplinas = Object.keys(estatisticas);
-    const quantidades = disciplinas.map(disciplina => estatisticas[disciplina]);
-    
-    // Configurar dados do gráfico
     const data = {
-      labels: disciplinas,
+      labels: labels,
       datasets: [{
-        label: 'Quantidade de Questões',
-        data: quantidades,
+        label: 'Quantidade de Alunos',
+        data: valores,
         backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(54, 162, 235, 0.5)',
-          'rgba(255, 206, 86, 0.5)',
-          'rgba(75, 192, 192, 0.5)',
-          'rgba(153, 102, 255, 0.5)'
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(255, 205, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(54, 162, 235, 0.7)'
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)'
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)'
         ],
         borderWidth: 1
       }]
     };
     
-    // Criar ou atualizar gráfico
-    const ctx = document.getElementById('questoesDisciplinaChart').getContext('2d');
-    
-    if (questoesDisciplinaChart) {
-      questoesDisciplinaChart.data = data;
-      questoesDisciplinaChart.update();
-    } else {
-      questoesDisciplinaChart = new Chart(ctx, {
-        type: 'pie',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'right'
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              title: function(tooltipItems) {
+                return `Faixa: ${tooltipItems[0].label}`;
+              },
+              label: function(context) {
+                return `${context.parsed.y} alunos`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Quantidade de Alunos'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Faixa de Nota'
             }
           }
         }
-      });
+      }
+    };
+
+    // Criar ou atualizar gráfico
+    if (distribuicaoNotasChart) {
+      distribuicaoNotasChart.data = data;
+      distribuicaoNotasChart.update();
+    } else {
+      distribuicaoNotasChart = new Chart(ctx, config);
     }
   }
 
-  // Atualizar gráfico de desempenho por conteúdo
-  function atualizarGraficoConteudo() {
-    // Agrupar resultados por conteúdo
-    const conteudos = [];
-    const desempenhos = [];
-    
-    // Verificar se temos dados de conteúdo nas provas
-    if (filteredData.provas.some(prova => prova.conteudo)) {
-      const desempenhoPorConteudo = {};
-      const contagemPorConteudo = {};
-      
-      // Mapear provas para obter conteúdos
-      filteredData.provas.forEach(prova => {
-        if (prova.conteudo) {
-          if (!desempenhoPorConteudo[prova.conteudo]) {
-            desempenhoPorConteudo[prova.conteudo] = 0;
-            contagemPorConteudo[prova.conteudo] = 0;
-          }
-          
-          // Encontrar resultados desta prova
-          const resultadosProva = filteredData.resultados.filter(r => r.provaId === prova.id);
-          resultadosProva.forEach(resultado => {
-            desempenhoPorConteudo[prova.conteudo] += resultado.nota;
-            contagemPorConteudo[prova.conteudo]++;
-          });
-        }
-      });
-      
-      // Calcular médias por conteúdo
-      Object.keys(desempenhoPorConteudo).forEach(conteudo => {
-        conteudos.push(conteudo);
-        const media = contagemPorConteudo[conteudo] > 0 ? 
-          (desempenhoPorConteudo[conteudo] / contagemPorConteudo[conteudo]).toFixed(1) : 0;
-        desempenhos.push(media);
-      });
-    }
-    
-    // Se não houver dados, exibir mensagem
-    if (conteudos.length === 0) {
-      const ctx = document.getElementById('conteudoChart').getContext('2d');
-      ctx.canvas.style.display = 'none';
-      const mensagem = document.createElement('p');
-      mensagem.className = 'no-data-message';
-      mensagem.textContent = 'Não há dados de conteúdo disponíveis';
-      ctx.canvas.parentNode.appendChild(mensagem);
+  // Atualizar gráfico de média por turma
+  function atualizarGraficoMediaTurma(estatisticasAvancadas) {
+    const ctx = document.getElementById('mediaTurmaChart').getContext('2d');
+    const dados = estatisticasAvancadas.mediaPorTurma || [];
+
+    if (dados.length === 0) {
+      ctx.canvas.parentNode.innerHTML = '<p class="no-data-message">Não há dados suficientes para mostrar a média por turma.</p>';
       return;
-    } else {
-      const ctx = document.getElementById('conteudoChart');
-      ctx.style.display = 'block';
-      const mensagem = ctx.parentNode.querySelector('.no-data-message');
-      if (mensagem) mensagem.remove();
     }
+
+    // Preparar dados para o gráfico
+    const labels = dados.map(item => item.turma);
+    const valores = dados.map(item => parseFloat(item.media));
     
-    // Configurar dados do gráfico
     const data = {
-      labels: conteudos,
+      labels: labels,
       datasets: [{
-        label: 'Média de Desempenho',
-        data: desempenhos,
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        label: 'Média de Acertos (%)',
+        data: valores,
+        backgroundColor: 'rgba(75, 192, 192, 0.7)',
         borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-        fill: false
-      }]
-    };
-    
-    // Criar ou atualizar gráfico
-    const ctx = document.getElementById('conteudoChart').getContext('2d');
-    
-    if (conteudoChart) {
-      conteudoChart.data = data;
-      conteudoChart.update();
-    } else {
-      conteudoChart = new Chart(ctx, {
-        type: 'radar',
-        data: data,
-        options: {
-          responsive: true,
-          scales: {
-            r: {
-              beginAtZero: true,
-              max: 10
-            }
-          }
-        }
-      });
-    }
-  }
-
-  // Atualizar gráfico de questões por nível de dificuldade
-  function atualizarGraficoDificuldade() {
-    // Verificar se temos estatísticas de questões
-    if (!filteredData.estatisticas || !filteredData.estatisticas.questoes || !filteredData.estatisticas.questoes.porNivelDificuldade) {
-      return;
-    }
-    
-    const estatisticas = filteredData.estatisticas.questoes.porNivelDificuldade;
-    const niveis = Object.keys(estatisticas);
-    const quantidades = niveis.map(nivel => estatisticas[nivel]);
-    
-    // Configurar dados do gráfico
-    const data = {
-      labels: niveis,
-      datasets: [{
-        label: 'Quantidade de Questões',
-        data: quantidades,
-        backgroundColor: [
-          'rgba(75, 192, 192, 0.5)',  // Fácil
-          'rgba(255, 206, 86, 0.5)',  // Médio
-          'rgba(255, 99, 132, 0.5)'   // Difícil
-        ],
-        borderColor: [
-          'rgba(75, 192, 192, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(255, 99, 132, 1)'
-        ],
         borderWidth: 1
       }]
     };
     
-    // Criar ou atualizar gráfico
-    const ctx = document.getElementById('dificuldadeChart').getContext('2d');
-    
-    if (dificuldadeChart) {
-      dificuldadeChart.data = data;
-      dificuldadeChart.update();
-    } else {
-      dificuldadeChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom'
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              title: function(tooltipItems) {
+                return `Turma: ${tooltipItems[0].label}`;
+              },
+              label: function(context) {
+                return `Média: ${context.parsed.y.toFixed(2)}%`;
+              },
+              afterLabel: function(context) {
+                const turmaIndex = context.dataIndex;
+                return `Total de alunos: ${dados[turmaIndex].totalAlunos}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Média de Acertos (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Turma'
             }
           }
         }
+      }
+    };
+
+    // Criar ou atualizar gráfico
+    if (mediaTurmaChart) {
+      mediaTurmaChart.data = data;
+      mediaTurmaChart.update();
+    } else {
+      mediaTurmaChart = new Chart(ctx, config);
+    }
+  }
+
+  // Atualizar gráfico de média por conteúdo
+  function atualizarGraficoMediaPorConteudo(estatisticasAvancadas) {
+    const ctx = document.getElementById('mediaPorConteudoChart').getContext('2d');
+    const dados = estatisticasAvancadas.mediaPorConteudo || [];
+
+    if (dados.length === 0) {
+      ctx.canvas.parentNode.innerHTML = '<p class="no-data-message">Não há dados suficientes para mostrar a taxa de acerto por conteúdo.</p>';
+      return;
+    }
+
+    // Limitar a 10 conteúdos para melhor visualização
+    const dadosLimitados = dados.slice(0, 10);
+
+    // Preparar dados para o gráfico
+    const labels = dadosLimitados.map(item => item.conteudo);
+    const valores = dadosLimitados.map(item => parseFloat(item.taxaAcerto));
+    
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'Taxa de Acerto (%)',
+        data: valores,
+        backgroundColor: valores.map(valor => {
+          // Cores baseadas na taxa de acerto
+          if (valor >= 80) return 'rgba(40, 167, 69, 0.7)';
+          if (valor >= 60) return 'rgba(92, 184, 92, 0.7)';
+          if (valor >= 40) return 'rgba(255, 193, 7, 0.7)';
+          if (valor >= 20) return 'rgba(253, 126, 20, 0.7)';
+          return 'rgba(220, 53, 69, 0.7)';
+        }),
+        borderColor: valores.map(valor => {
+          if (valor >= 80) return 'rgb(40, 167, 69)';
+          if (valor >= 60) return 'rgb(92, 184, 92)';
+          if (valor >= 40) return 'rgb(255, 193, 7)';
+          if (valor >= 20) return 'rgb(253, 126, 20)';
+          return 'rgb(220, 53, 69)';
+        }),
+        borderWidth: 1
+      }]
+    };
+    
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              title: function(tooltipItems) {
+                return `Conteúdo: ${tooltipItems[0].label}`;
+              },
+              label: function(context) {
+                return `Taxa de acerto: ${context.parsed.x.toFixed(2)}%`;
+              },
+              afterLabel: function(context) {
+                const conteudoIndex = context.dataIndex;
+                return `Total de respostas: ${dadosLimitados[conteudoIndex].totalRespostas}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Taxa de Acerto (%)'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Conteúdo'
+            }
+          }
+        }
+      }
+    };
+
+    // Criar ou atualizar gráfico
+    if (mediaPorConteudoChart) {
+      mediaPorConteudoChart.data = data;
+      mediaPorConteudoChart.update();
+    } else {
+      mediaPorConteudoChart = new Chart(ctx, config);
+    }
+  }
+
+  // Atualizar tabela de questões difíceis
+  function atualizarTabelaQuestoesDificeis(estatisticasAvancadas) {
+    const tabela = document.getElementById('questoesDificeisTableBody');
+    const dados = estatisticasAvancadas.questoesDificeis || [];
+
+    if (dados.length === 0) {
+      tabela.innerHTML = '<tr><td colspan="5" class="no-data-message">Não há dados suficientes para mostrar as questões mais difíceis.</td></tr>';
+      return;
+    }
+
+    // Limpar tabela
+    tabela.innerHTML = '';
+
+    // Preencher tabela com as questões mais difíceis
+    dados.forEach(questao => {
+      const tr = document.createElement('tr');
+      
+      // Definir classe baseada na taxa de acerto
+      if (parseFloat(questao.taxaAcerto) < 30) {
+        tr.classList.add('questao-dificil');
+      }
+      
+      tr.innerHTML = `
+        <td>${questao.enunciado}</td>
+        <td>${questao.disciplina}</td>
+        <td>${questao.conteudo}</td>
+        <td>${questao.taxaAcerto}%</td>
+        <td>${questao.totalRespostas}</td>
+      `;
+      
+      tabela.appendChild(tr);
+    });
+  }
+
+  // Atualizar tabela de desempenho individual dos alunos
+  function atualizarTabelaDesempenhoAlunos(estatisticasAvancadas) {
+    const tabela = document.getElementById('alunosTableBody');
+    const dados = estatisticasAvancadas.desempenhoIndividual || [];
+
+    if (dados.length === 0) {
+      tabela.innerHTML = '<tr><td colspan="5" class="no-data-message">Não há dados suficientes para mostrar o desempenho individual dos alunos.</td></tr>';
+      return;
+    }
+
+    // Limpar tabela
+    tabela.innerHTML = '';
+
+    // Preencher tabela com os alunos
+    dados.forEach(aluno => {
+      const tr = document.createElement('tr');
+      
+      // Definir classe baseada na média geral
+      const media = parseFloat(aluno.mediaGeral);
+      let classeMedia = '';
+      
+      if (media >= 80) {
+        classeMedia = 'nota-aprovado';
+      } else if (media >= 60) {
+        classeMedia = 'nota-recuperacao';
+      } else {
+        classeMedia = 'nota-reprovado';
+      }
+      
+      tr.innerHTML = `
+        <td>${aluno.nome}</td>
+        <td>${aluno.turma}</td>
+        <td class="${classeMedia}">${aluno.mediaGeral}%</td>
+        <td>${aluno.totalProvas}</td>
+        <td>
+          <button class="btn-acao" onclick="visualizarEvolucaoAluno('${aluno.id}')">
+            Evolução
+          </button>
+        </td>
+      `;
+      
+      tabela.appendChild(tr);
+    });
+
+    // Adicionar evento de pesquisa no filtro de alunos
+    const inputPesquisa = document.getElementById('alunoSearchFilter');
+    if (inputPesquisa) {
+      inputPesquisa.addEventListener('keyup', () => {
+        const termo = inputPesquisa.value.toLowerCase();
+        const linhas = tabela.querySelectorAll('tr');
+        
+        linhas.forEach(linha => {
+          const nomeAluno = linha.querySelector('td:first-child').textContent.toLowerCase();
+          const turmaAluno = linha.querySelector('td:nth-child(2)').textContent.toLowerCase();
+          
+          if (nomeAluno.includes(termo) || turmaAluno.includes(termo)) {
+            linha.style.display = '';
+          } else {
+            linha.style.display = 'none';
+          }
+        });
       });
+    }
+  }
+
+  // Criar mapa de calor de desempenho
+  function criarMapaCalor(estatisticasAvancadas) {
+    const container = document.getElementById('heatmapContainer');
+    const dados = estatisticasAvancadas.evoluçãoTemporal || [];
+    
+    if (dados.length === 0) {
+      container.innerHTML = '<p class="no-data-message">Não há dados suficientes para mostrar o mapa de calor.</p>';
+      return;
+    }
+
+    // Limpar container
+    container.innerHTML = '';
+
+    // Criar estrutura básica da tabela
+    const table = document.createElement('table');
+    table.className = 'heatmap-table';
+    container.appendChild(table);
+
+    // Simplificar para mostrar apenas os dados por período
+    const thead = document.createElement('thead');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <th>Período</th>
+      <th>Média de Acertos</th>
+      <th>Nível</th>
+    `;
+    thead.appendChild(tr);
+    table.appendChild(thead);
+
+    // Adicionar corpo da tabela
+    const tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+
+    // Adicionar linhas à tabela
+    dados.forEach(item => {
+      const tr = document.createElement('tr');
+      const media = parseFloat(item.media);
+      
+      // Determinar nível de desempenho
+      let nivel = 1;
+      let classe = 'heatmap-nivel-1';
+      
+      if (media >= 80) {
+        nivel = 5;
+        classe = 'heatmap-nivel-5';
+      } else if (media >= 70) {
+        nivel = 4;
+        classe = 'heatmap-nivel-4';
+      } else if (media >= 60) {
+        nivel = 3;
+        classe = 'heatmap-nivel-3';
+      } else if (media >= 40) {
+        nivel = 2;
+        classe = 'heatmap-nivel-2';
+      }
+      
+      tr.innerHTML = `
+        <td>${item.periodo}</td>
+        <td>${item.media}%</td>
+        <td><div class="${classe} heatmap-cell">${nivel}</div></td>
+      `;
+      
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Visualizar evolução de um aluno específico
+  window.visualizarEvolucaoAluno = function(alunoId) {
+    if (!filteredData || !filteredData.estatisticas || !filteredData.estatisticas.avancadas) {
+      alert('Dados de estatísticas não disponíveis.');
+      return;
+    }
+
+    const estatisticasAvancadas = filteredData.estatisticas.avancadas;
+    const alunos = estatisticasAvancadas.desempenhoIndividual || [];
+    
+    // Encontrar o aluno selecionado
+    alunoSelecionado = alunos.find(a => a.id === alunoId);
+    
+    if (!alunoSelecionado) {
+      alert('Dados do aluno não encontrados.');
+      return;
+    }
+
+    // Atualizar mensagem informativa
+    const mensagemAluno = document.getElementById('alunoSelecionado');
+    if (mensagemAluno) {
+      mensagemAluno.textContent = `Evolução de ${alunoSelecionado.nome} - ${alunoSelecionado.turma}`;
+    }
+
+    // Atualizar gráfico de evolução
+    atualizarGraficoEvolucaoAluno();
+  };
+
+  // Atualizar gráfico de evolução do aluno
+  function atualizarGraficoEvolucaoAluno() {
+    const ctx = document.getElementById('evolucaoAlunoChart').getContext('2d');
+    
+    if (!alunoSelecionado || !alunoSelecionado.evolucao || alunoSelecionado.evolucao.length === 0) {
+      ctx.canvas.parentNode.innerHTML = '<p class="no-data-message">Selecione um aluno para visualizar sua evolução ou não há dados suficientes.</p>';
+      return;
+    }
+
+    // Preparar dados para o gráfico
+    const dados = alunoSelecionado.evolucao;
+    const labels = dados.map(item => {
+      const data = new Date(item.data);
+      return `${data.getDate()}/${data.getMonth() + 1}/${data.getFullYear()}`;
+    });
+    const valores = dados.map(item => item.percentualAcerto);
+    
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'Percentual de Acerto',
+        data: valores,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        tension: 0.1,
+        fill: true
+      }]
+    };
+    
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: function(tooltipItems) {
+                const index = tooltipItems[0].dataIndex;
+                return dados[index].provaTitulo;
+              },
+              label: function(context) {
+                return `Acerto: ${context.parsed.y.toFixed(2)}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Percentual de Acerto (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Data da Prova'
+            }
+          }
+        }
+      }
+    };
+
+    // Criar ou atualizar gráfico
+    if (evolucaoAlunoChart) {
+      evolucaoAlunoChart.data = data;
+      evolucaoAlunoChart.update();
+    } else {
+      evolucaoAlunoChart = new Chart(ctx, config);
     }
   }
 
@@ -622,8 +1032,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Função para exportar relatório
   btnExportar.addEventListener('click', () => {
-    alert('Relatório exportado com sucesso!');
-    // Implementação real: gerar PDF ou CSV com os dados filtrados
+    if (!filteredData) {
+      alert('Não há dados para exportar.');
+      return;
+    }
+    
+    // Implementação da exportação
+    alert('Função de exportação será implementada em breve.');
   });
 
   // Função para exportar detalhes
@@ -636,6 +1051,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   turmaFilter.addEventListener('change', aplicarFiltros);
   disciplinaFilter.addEventListener('change', aplicarFiltros);
   provaFilter.addEventListener('change', aplicarFiltros);
+  periodoFilter.addEventListener('change', aplicarFiltros);
   alunoFilter.addEventListener('input', () => {
     // Apenas atualiza a tabela de resultados quando o filtro de aluno muda
     atualizarTabelaResultados();
@@ -646,6 +1062,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const turma = turmaFilter.value;
     const disciplina = disciplinaFilter.value;
     const provaId = provaFilter.value;
+    const periodo = periodoFilter.value;
     
     // Filtrar provas
     let provasFiltradas = dashboardData.provas;
