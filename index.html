@@ -1,46 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Educa Smart - Sistema de Provas</title>
-  <!-- CSS principal -->
-  <link rel="stylesheet" href="/css/style.css">
-  <!-- CSS específico para login -->
-  <link rel="stylesheet" href="/css/login-professor.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EducaSmart - Educação Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
-<body style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; font-family: 'Nunito Sans', 'DM Sans', Arial, sans-serif;">
-  
-  <!-- Cabeçalho -->
-  <header class="header" style="background: rgba(255,255,255,0.85); box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
-    <nav class="navbar" style="display: flex; align-items: center; justify-content: center; padding: 1.2rem 0;">
-      <!-- Logo ou nome do sistema -->
-      <div class="logo" style="text-align: center;">
-        <span class="logo-top" style="display: block; font-size: 2.2rem; font-weight: 800; color: #3a86ff; letter-spacing: 2px;">Educa</span>
-        <span class="logo-bottom" style="display: block; font-size: 1.4rem; font-weight: 600; color: #ffbe0b; letter-spacing: 1px; margin-top: -0.5rem;">Smart</span>
-      </div>
-    </nav>
-  </header>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>EducaSmart</h1>
+            </div>
+        </header>
 
-  <!-- Container principal -->
-  <main class="container login-container" style="display: flex; align-items: center; justify-content: center; min-height: 70vh;">
-    <div class="login-card" style="background: #fff; border-radius: 1.5rem; box-shadow: 0 8px 32px rgba(58,134,255,0.10), 0 1.5px 8px rgba(0,0,0,0.04); padding: 3rem 2.5rem; max-width: 370px; width: 100%; text-align: center; transition: box-shadow 0.3s;">
-      <h1 style="font-size: 2.1rem; font-weight: 800; color: #3a86ff; margin-bottom: 0.5rem; letter-spacing: 1px;">Bem-vindo ao Educa Smart</h1>
-      <p class="login-subtitle" style="font-size: 1.1rem; color: #555; margin-bottom: 2.2rem;">Escolha seu tipo de acesso</p>
-      
-      <div class="login-options" style="display: flex; flex-direction: column; gap: 1.2rem;">
-        <a href="/pages/login-professor.html" class="btn-primary btn-login" style="background: linear-gradient(90deg, #3a86ff 60%, #4361ee 100%); color: #fff; font-weight: 700; padding: 0.9rem 0; border-radius: 0.8rem; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(58,134,255,0.08); text-decoration: none; transition: background 0.2s, transform 0.2s; letter-spacing: 0.5px; outline: none; border: none; cursor: pointer;">Professor</a>
-        <a href="/pages/login-aluno.html" class="btn-primary btn-login" style="background: linear-gradient(90deg, #ffbe0b 60%, #fb5607 100%); color: #fff; font-weight: 700; padding: 0.9rem 0; border-radius: 0.8rem; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(255,190,11,0.08); text-decoration: none; transition: background 0.2s, transform 0.2s; letter-spacing: 0.5px; outline: none; border: none; cursor: pointer;">Aluno</a>
-      </div>
-    </div>
-  </main>
-
-  <!-- Rodapé -->
-  <footer class="footer" style="background: transparent; text-align: center; padding: 1.2rem 0 0.5rem 0; color: #888; font-size: 1rem;">
-    <p>&copy; 2025 Educa Smart - Todos os direitos reservados</p>
-  </footer>
-
+        <main>
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>Transforme sua experiência educacional</h2>
+                    <p>Uma plataforma completa para professores e alunos potencializarem o aprendizado através de simulados.</p>
+                    <a href="https://educasmart-frontend.vercel.app/" class="cta-button">Acessar Plataforma</a>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Estudantes aprendendo">
+                </div>
+            </section>
+    <script src="script.js"></script>
 </body>
 </html>
