@@ -3,31 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EducaSmart - Educação Inteligente</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>EDUCASMART - Em Manutenção</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 40px 30px;
+        }
+
+        .school-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #4a90e2;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            letter-spacing: 1px;
+        }
+
+        .main-message {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: #34495e;
+        }
+
+        .loading-container {
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .book-loader {
+            position: relative;
+            width: 80px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        .book {
+            position: absolute;
+            width: 60px;
+            height: 8px;
+            background: #4a90e2;
+            border-radius: 4px;
+            animation: bookFlip 1.5s ease-in-out infinite;
+        }
+
+        .book:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .book:nth-child(2) {
+            animation-delay: 0.3s;
+            background: #e74c3c;
+        }
+
+        .book:nth-child(3) {
+            animation-delay: 0.6s;
+            background: #f39c12;
+        }
+
+        .book:nth-child(4) {
+            animation-delay: 0.9s;
+            background: #27ae60;
+        }
+
+        @keyframes bookFlip {
+            0%, 100% {
+                transform: translateY(0) rotateX(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px) rotateX(180deg);
+                opacity: 0.7;
+            }
+        }
+
+        .loading-text {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .slogan {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #5a6c7d;
+            margin-top: 40px;
+            max-width: 400px;
+        }
+
+        .brand-name {
+            color: #4a90e2;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4a90e2;
+            padding: 15px 20px;
+            margin-top: 30px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-text {
+            font-size: 0.95rem;
+            color: #495057;
+            margin: 0;
+        }
+
+        /* Responsividade para dispositivos móveis */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .school-icon {
+                font-size: 3rem;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+
+            .main-message {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            .book-loader {
+                width: 60px;
+                height: 45px;
+            }
+
+            .book {
+                width: 45px;
+                height: 6px;
+            }
+
+            .slogan {
+                font-size: 1rem;
+                margin-top: 30px;
+            }
+
+            .info-box {
+                padding: 12px 15px;
+                margin-top: 25px;
+            }
+
+            .info-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+            }
+
+            .school-icon {
+                font-size: 2.5rem;
+            }
+
+            .logo {
+                font-size: 1.6rem;
+            }
+
+            .main-message {
+                font-size: 1.3rem;
+            }
+
+            .slogan {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Animação de entrada suave */
+        .container {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="logo">
-                <h1>EducaSmart</h1>
+        <div class="school-icon">🎓</div>
+        
+        <div class="logo">EDUCASMART</div>
+        
+        <div class="main-message">
+            Estamos em Manutenção
+        </div>
+        
+        <div class="loading-container">
+            <div class="book-loader">
+                <div class="book"></div>
+                <div class="book"></div>
+                <div class="book"></div>
+                <div class="book"></div>
             </div>
-        </header>
+            <div class="loading-text">Atualizando sistema...</div>
+        </div>
+        
 
-        <main>
-            <section class="hero">
-                <div class="hero-content">
-                    <h2>Transforme sua experiência educacional</h2>
-                    <p>Uma plataforma completa para professores e alunos potencializarem o aprendizado através de simulados.</p>
-                    <a href="https://educasmart-frontend.vercel.app/" class="cta-button">Acessar Plataforma</a>
-                </div>
-                <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Estudantes aprendendo">
-                </div>
-            </section>
-    <script src="script.js"></script>
+        <div class="info-box">
+            <p class="info-text">
+                📧 Quando a manutenção terminar, serão enviados emails para todos os responsáveis
+            </p>
+        </div>
+    </div>
 </body>
 </html>
